@@ -17,6 +17,7 @@ import {
 
 import { Logo } from '@/components/Logo';
 import { Markdown } from '@/components/Markdown';
+import WaterMark from '@/components/WaterMark';
 
 import MessageComposer from './MessageComposer';
 import Starters from './Starters';
@@ -94,20 +95,41 @@ export default function WelcomeScreen(props: Props) {
     return <Logo className="w-[200px] mb-2" />;
   }, [chatProfiles, chatProfile]);
 
-  if (hasMessage(messages)) return null;
+  const threadHasMessages = hasMessage(messages);
+
+  if (threadHasMessages && !hasStarterWidget) return null;
+
+  if (threadHasMessages) {
+    return (
+      <div
+        id="welcome-screen"
+        className={cn(
+          'flex w-full justify-center pb-4 welcome-screen transition-opacity duration-500 opacity-0 delay-100',
+          isVisible && 'opacity-100'
+        )}
+      >
+        <Starters />
+      </div>
+    );
+  }
 
   return (
     <div
       id="welcome-screen"
       className={cn(
-        'flex flex-col -mt-[60px] gap-4 w-full flex-grow items-center justify-center welcome-screen mx-auto transition-opacity duration-500 opacity-0 delay-100',
+        'flex flex-col -mt-[60px] gap-4 w-full flex-grow welcome-screen mx-auto transition-opacity duration-500 opacity-0 delay-100',
         isVisible && 'opacity-100'
       )}
     >
-      {logo}
-      {hasStarterWidget ? <Starters /> : null}
-      <MessageComposer {...props} />
-      {hasStarterWidget ? null : <Starters />}
+      <div className="flex flex-col gap-4 w-full items-center">
+        {logo}
+        {hasStarterWidget ? <Starters /> : null}
+        {hasStarterWidget ? null : <Starters />}
+      </div>
+      <div className="mt-auto flex flex-col items-center gap-2 w-full">
+        <MessageComposer {...props} />
+        <WaterMark />
+      </div>
     </div>
   );
 }
