@@ -75,32 +75,8 @@ export default function StarterWidget({ widget }: Props) {
 
   if (!tabs.length) return null;
 
-  const headerLogo = resolveStarterIconUrl(apiClient, widget.header?.logo);
-
   return (
     <div className="mx-auto w-full max-w-3xl overflow-hidden rounded-3xl border bg-card text-card-foreground shadow-sm">
-      {widget.header?.title || widget.header?.subtitle || headerLogo ? (
-        <div className="flex items-center gap-4 border-b px-4 py-5">
-          {headerLogo ? (
-            <img
-              className="h-12 w-12 shrink-0 rounded-full object-cover"
-              src={headerLogo}
-              alt=""
-            />
-          ) : null}
-          <div className="min-w-0">
-            {widget.header?.title ? (
-              <p className="text-base font-semibold">{widget.header.title}</p>
-            ) : null}
-            {widget.header?.subtitle ? (
-              <p className="text-sm text-muted-foreground">
-                {widget.header.subtitle}
-              </p>
-            ) : null}
-          </div>
-        </div>
-      ) : null}
-
       <Tabs
         className="w-full"
         value={selectedTab}
