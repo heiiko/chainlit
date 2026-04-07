@@ -44,6 +44,23 @@ export default function WelcomeScreen(props: Props) {
     setIsVisible(true);
   }, []);
 
+  const selectedChatProfile = useMemo(() => {
+    if (!chatProfile) return undefined;
+    return chatProfiles?.find((profile) => profile.name === chatProfile);
+  }, [chatProfile, chatProfiles]);
+
+  const hasStarterWidget = useMemo(() => {
+    if (selectedChatProfile?.starterWidget) {
+      return true;
+    }
+
+    if (selectedChatProfile?.starters?.length) {
+      return false;
+    }
+
+    return Boolean(config?.starterWidget?.tabs?.length);
+  }, [config, selectedChatProfile]);
+
   const logo = useMemo(() => {
     if (chatProfile && chatProfiles) {
       const currentChatProfile = chatProfiles.find(
@@ -88,8 +105,9 @@ export default function WelcomeScreen(props: Props) {
       )}
     >
       {logo}
+      {hasStarterWidget ? <Starters /> : null}
       <MessageComposer {...props} />
-      <Starters />
+      {hasStarterWidget ? null : <Starters />}
     </div>
   );
 }
