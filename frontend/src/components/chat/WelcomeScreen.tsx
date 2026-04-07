@@ -104,7 +104,7 @@ export default function WelcomeScreen(props: Props) {
       <div
         id="welcome-screen"
         className={cn(
-          'flex w-full justify-center pb-4 welcome-screen transition-opacity duration-500 opacity-0 delay-100',
+          'flex w-full justify-center pb-8 welcome-screen transition-opacity duration-500 opacity-0 delay-100',
           isVisible && 'opacity-100'
         )}
       >
