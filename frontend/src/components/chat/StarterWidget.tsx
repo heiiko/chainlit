@@ -88,8 +88,9 @@ export default function StarterWidget({ widget }: Props) {
               key={tab.key}
               value={tab.key}
               className={cn(
-                'h-auto rounded-none border-b-2 border-transparent px-4 py-3 text-sm',
+                'h-auto rounded-none border-b-2 border-transparent px-4 py-3 text-sm font-sans font-normal uppercase',
                 'data-[state=active]:border-foreground data-[state=active]:bg-transparent',
+                'data-[state=active]:font-bold',
                 'data-[state=active]:shadow-none'
               )}
             >
