@@ -108,7 +108,10 @@ export default function WelcomeScreen(props: Props) {
           isVisible && 'opacity-100'
         )}
       >
-        <Starters />
+        <div className="flex flex-col gap-4 w-full items-center">
+          {logo}
+          <Starters />
+        </div>
       </div>
     );
   }
@@ -117,7 +120,7 @@ export default function WelcomeScreen(props: Props) {
     <div
       id="welcome-screen"
       className={cn(
-        'flex flex-col -mt-[60px] gap-4 w-full flex-grow welcome-screen mx-auto transition-opacity duration-500 opacity-0 delay-100',
+        'flex flex-col gap-4 w-full flex-grow welcome-screen mx-auto transition-opacity duration-500 opacity-0 delay-100',
         isVisible && 'opacity-100'
       )}
     >
