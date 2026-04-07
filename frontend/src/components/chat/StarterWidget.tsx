@@ -16,6 +16,9 @@ import {
   useStarterAction
 } from './useStarter';
 
+const COMPACT_STARTER_WIDGET_BREAKPOINT = 380;
+const COMPACT_STARTER_WIDGET_LIMIT = 4;
+
 interface StarterWidgetItemProps {
   starter: IStarter;
 }
@@ -57,6 +60,7 @@ interface Props {
 export default function StarterWidget({ widget }: Props) {
   const apiClient = useContext(ChainlitContext);
   const tabs = widget.tabs || [];
+  const [isCompactScreen, setIsCompactScreen] = useState(false);
   const defaultTab = useMemo(() => {
     if (!tabs.length) return '';
     if (
@@ -72,6 +76,20 @@ export default function StarterWidget({ widget }: Props) {
   useEffect(() => {
     setSelectedTab(defaultTab);
   }, [defaultTab]);
+
+  useEffect(() => {
+    const mql = window.matchMedia(
+      `(max-width: ${COMPACT_STARTER_WIDGET_BREAKPOINT}px)`
+    );
+    const onChange = () => {
+      setIsCompactScreen(mql.matches);
+    };
+
+    onChange();
+    mql.addEventListener('change', onChange);
+
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
 
   if (!tabs.length) return null;
 
@@ -110,7 +128,10 @@ export default function StarterWidget({ widget }: Props) {
         {tabs.map((tab) => (
           <TabsContent key={tab.key} value={tab.key} className="mt-0">
             <div className="divide-y">
-              {tab.starters.map((starter) => (
+              {(isCompactScreen
+                ? tab.starters.slice(0, COMPACT_STARTER_WIDGET_LIMIT)
+                : tab.starters
+              ).map((starter) => (
                 <StarterWidgetItem key={starter.label} starter={starter} />
               ))}
             </div>
