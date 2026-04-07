@@ -563,6 +563,53 @@ async def test_set_starter_categories(
         assert len(starters_list) == 2
 
 
+async def test_set_starter_widget(
+    mock_chainlit_context, test_config: config.ChainlitConfig
+):
+    from chainlit.callbacks import set_starter_widget
+    from chainlit.types import (
+        Starter,
+        StarterWidget,
+        StarterWidgetHeader,
+        StarterWidgetTab,
+    )
+
+    async with mock_chainlit_context:
+
+        @set_starter_widget
+        async def get_starter_widget(user, language):
+            return StarterWidget(
+                header=StarterWidgetHeader(
+                    title="Test Widget",
+                    subtitle="Choose a prompt",
+                    logo="https://example.com/logo.png",
+                ),
+                tabs=[
+                    StarterWidgetTab(
+                        key="trending",
+                        label="Trending",
+                        starters=[
+                            Starter(label="Top stories", message="Top stories"),
+                            Starter(label="Markets", message="Markets"),
+                        ],
+                    )
+                ],
+                initial_tab="trending",
+            )
+
+        assert test_config.code.set_starter_widget is not None
+
+        result = await test_config.code.set_starter_widget(None, None)
+
+        assert isinstance(result, StarterWidget)
+        assert result.header is not None
+        assert result.header.title == "Test Widget"
+        assert result.initial_tab == "trending"
+        assert len(result.tabs) == 1
+        assert result.tabs[0].key == "trending"
+        assert result.tabs[0].starters[0].label == "Top stories"
+
+
 async def test_on_shared_thread_view_allow(
     mock_chainlit_context, test_config: config.ChainlitConfig
 ):

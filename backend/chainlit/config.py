@@ -39,6 +39,7 @@ if TYPE_CHECKING:
         InputAudioChunk,
         Starter,
         StarterCategory,
+        StarterWidget,
         ThreadDict,
     )
     from chainlit.user import User
@@ -46,7 +47,7 @@ else:
     # Pydantic needs to resolve forward annotations. Because all of these are used
     # within `typing.Callable`, alias to `Any` as Pydantic does not perform validation
     # of callable argument/return types anyway.
-    Request = Response = Action = Message = ChatProfile = InputAudioChunk = Starter = StarterCategory = ThreadDict = User = Feedback = Any  # fmt: off
+    Request = Response = Action = Message = ChatProfile = InputAudioChunk = Starter = StarterCategory = StarterWidget = ThreadDict = User = Feedback = Any  # fmt: off
 
 BACKEND_ROOT = os.path.dirname(__file__)
 PACKAGE_ROOT = os.path.dirname(os.path.dirname(BACKEND_ROOT))
@@ -417,6 +418,9 @@ class CodeSettings(BaseModel):
         Callable[
             [Optional["User"], Optional["str"]], Awaitable[List["StarterCategory"]]
         ]
+    ] = None
+    set_starter_widget: Optional[
+        Callable[[Optional["User"], Optional["str"]], Awaitable["StarterWidget"]]
     ] = None
     on_shared_thread_view: Optional[
         Callable[["ThreadDict", Optional["User"]], Awaitable[bool]]
