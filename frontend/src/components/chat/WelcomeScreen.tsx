@@ -80,6 +80,7 @@ export default function WelcomeScreen(props: Props) {
             />
             {currentChatProfile?.markdown_description ? (
               <Markdown
+                className="font-sans"
                 allowHtml={allowHtml}
                 latex={latex}
                 renderMarkdown={true}
