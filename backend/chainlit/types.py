@@ -310,6 +310,35 @@ class StarterCategory(DataClassJsonMixin):
 
 
 @dataclass
+class StarterWidgetHeader(DataClassJsonMixin):
+    """Optional header content displayed above a starter widget."""
+
+    title: Optional[str] = None
+    subtitle: Optional[str] = None
+    logo: Optional[str] = None
+
+
+@dataclass
+class StarterWidgetTab(DataClassJsonMixin):
+    """A tab within a starter widget containing a list of starters."""
+
+    key: str
+    label: str
+    icon: Optional[str] = None
+    starters: List[Starter] = field(default_factory=list)
+
+
+@dataclass
+class StarterWidget(DataClassJsonMixin):
+    """A structured starter widget rendered on the welcome screen."""
+
+    type: Literal["tabs"] = "tabs"
+    tabs: List[StarterWidgetTab] = field(default_factory=list)
+    header: Optional[StarterWidgetHeader] = None
+    initial_tab: Optional[str] = None
+
+
+@dataclass
 class ChatProfile(DataClassJsonMixin):
     """Specification for a chat profile that can be chosen by the user at the thread start."""
 
@@ -319,6 +348,7 @@ class ChatProfile(DataClassJsonMixin):
     display_name: Optional[str] = None
     default: bool = False
     starters: Optional[List[Starter]] = None
+    starter_widget: Optional[StarterWidget] = None
     config_overrides: Any = None
 
 

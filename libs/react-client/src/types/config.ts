@@ -11,6 +11,26 @@ export interface IStarterCategory {
   starters: IStarter[];
 }
 
+export interface IStarterWidgetHeader {
+  title?: string;
+  subtitle?: string;
+  logo?: string;
+}
+
+export interface IStarterWidgetTab {
+  key: string;
+  label: string;
+  icon?: string;
+  starters: IStarter[];
+}
+
+export interface IStarterWidget {
+  type?: 'tabs';
+  header?: IStarterWidgetHeader;
+  tabs: IStarterWidgetTab[];
+  initialTab?: string;
+}
+
 export interface ChatProfile {
   default: boolean;
   icon?: string;
@@ -18,6 +38,7 @@ export interface ChatProfile {
   display_name?: string;
   markdown_description: string;
   starters?: IStarter[];
+  starterWidget?: IStarterWidget;
 }
 
 export interface IAudioConfig {
@@ -103,6 +124,7 @@ export interface IChainlitConfig {
   chatProfiles: ChatProfile[];
   starters?: IStarter[];
   starterCategories?: IStarterCategory[];
+  starterWidget?: IStarterWidget;
 
   translation: object;
 }

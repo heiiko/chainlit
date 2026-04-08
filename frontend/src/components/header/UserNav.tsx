@@ -44,7 +44,7 @@ export default function UserNav() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => logout(true)}>
+        <DropdownMenuItem id="logout" onClick={() => logout(true)}>
           <Translator path="navigation.user.menu.logout" />
           <LogOut className="ml-auto" />
         </DropdownMenuItem>

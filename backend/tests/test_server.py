@@ -114,6 +114,43 @@ async def test_project_settings(test_client: TestClient, mock_get_current_user: 
     assert "debugUrl" in data
     assert data["chatProfiles"] == []
     assert data["starters"] == []
+    assert data["starterWidget"] is None
+
+
+async def test_project_settings_with_starter_widget(
+    test_client: TestClient,
+    mock_get_current_user: Mock,
+    test_config: ChainlitConfig,
+):
+    from chainlit.types import (
+        Starter,
+        StarterWidget,
+        StarterWidgetHeader,
+        StarterWidgetTab,
+    )
+
+    test_config.code.set_starter_widget = AsyncMock(
+        return_value=StarterWidget(
+            header=StarterWidgetHeader(title="News Assistant"),
+            tabs=[
+                StarterWidgetTab(
+                    key="trending",
+                    label="Trending",
+                    starters=[Starter(label="Top stories", message="Top stories")],
+                )
+            ],
+            initial_tab="trending",
+        )
+    )
+
+    response = test_client.get("/project/settings")
+
+    assert response.status_code == 200, response.json()
+    data = response.json()
+    assert data["starterWidget"]["header"]["title"] == "News Assistant"
+    assert data["starterWidget"]["tabs"][0]["key"] == "trending"
+    assert data["starterWidget"]["tabs"][0]["starters"][0]["label"] == "Top stories"
+    assert data["starterWidget"]["initialTab"] == "trending"
 
 
 def test_project_settings_path_traversal(

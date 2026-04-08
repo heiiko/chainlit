@@ -5,6 +5,7 @@ import { useChatSession, useConfig } from '@chainlit/react-client';
 
 import Starter from './Starter';
 import StarterCategory from './StarterCategory';
+import StarterWidget from './StarterWidget';
 
 interface Props {
   className?: string;
@@ -15,19 +16,50 @@ export default function Starters({ className }: Props) {
   const { config } = useConfig();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const starters = useMemo(() => {
-    if (chatProfile) {
-      const selectedChatProfile = config?.chatProfiles.find(
-        (profile) => profile.name === chatProfile
-      );
-      if (selectedChatProfile?.starters) {
-        return selectedChatProfile.starters;
-      }
-    }
-    return config?.starters;
+  const selectedChatProfile = useMemo(() => {
+    if (!chatProfile) return undefined;
+    return config?.chatProfiles.find((profile) => profile.name === chatProfile);
   }, [config, chatProfile]);
 
-  const starterCategories = config?.starterCategories;
+  const starterWidget = useMemo(() => {
+    if (selectedChatProfile?.starterWidget) {
+      return selectedChatProfile.starterWidget;
+    }
+
+    if (selectedChatProfile?.starters?.length) {
+      return undefined;
+    }
+
+    return config?.starterWidget;
+  }, [config, selectedChatProfile]);
+
+  const starters = useMemo(() => {
+    if (selectedChatProfile?.starterWidget) {
+      return undefined;
+    }
+
+    if (selectedChatProfile?.starters) {
+      return selectedChatProfile.starters;
+    }
+
+    if (config?.starterWidget) {
+      return undefined;
+    }
+
+    return config?.starters;
+  }, [config, selectedChatProfile]);
+
+  const starterCategories = starterWidget
+    ? undefined
+    : config?.starterCategories;
+
+  if (starterWidget?.tabs?.length) {
+    return (
+      <div id="starters" className={cn('flex w-full', className)}>
+        <StarterWidget widget={starterWidget} />
+      </div>
+    );
+  }
 
   if (starterCategories?.length) {
     const selectedCategoryData = starterCategories.find(
@@ -37,29 +69,31 @@ export default function Starters({ className }: Props) {
     return (
       <div
         id="starters"
-        className={cn('flex flex-col gap-4 items-center', className)}
+        className={cn('flex w-full justify-center', className)}
       >
-        <div className="flex gap-2 justify-center flex-wrap">
-          {starterCategories.map((category) => (
-            <StarterCategory
-              key={category.label}
-              category={category}
-              isSelected={selectedCategory === category.label}
-              onClick={() =>
-                setSelectedCategory(
-                  selectedCategory === category.label ? null : category.label
-                )
-              }
-            />
-          ))}
-        </div>
-        {selectedCategoryData?.starters?.length && (
+        <div className="flex flex-col gap-4 items-center">
           <div className="flex gap-2 justify-center flex-wrap">
-            {selectedCategoryData.starters.map((starter) => (
-              <Starter key={starter.label} starter={starter} />
+            {starterCategories.map((category) => (
+              <StarterCategory
+                key={category.label}
+                category={category}
+                isSelected={selectedCategory === category.label}
+                onClick={() =>
+                  setSelectedCategory(
+                    selectedCategory === category.label ? null : category.label
+                  )
+                }
+              />
             ))}
           </div>
-        )}
+          {selectedCategoryData?.starters?.length && (
+            <div className="flex gap-2 justify-center flex-wrap">
+              {selectedCategoryData.starters.map((starter) => (
+                <Starter key={starter.label} starter={starter} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     );
   }
@@ -67,13 +101,12 @@ export default function Starters({ className }: Props) {
   if (!starters?.length) return null;
 
   return (
-    <div
-      id="starters"
-      className={cn('flex gap-2 justify-center flex-wrap', className)}
-    >
-      {starters.map((starter, i) => (
-        <Starter key={i} starter={starter} />
-      ))}
+    <div id="starters" className={cn('flex w-full justify-center', className)}>
+      <div className="flex gap-2 justify-center flex-wrap">
+        {starters.map((starter, i) => (
+          <Starter key={i} starter={starter} />
+        ))}
+      </div>
     </div>
   );
 }
