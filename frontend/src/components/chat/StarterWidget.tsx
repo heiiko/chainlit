@@ -94,7 +94,7 @@ export default function StarterWidget({ widget }: Props) {
   if (!tabs.length) return null;
 
   return (
-    <div className="mx-auto w-full max-w-3xl overflow-hidden rounded-3xl border bg-card text-card-foreground shadow-sm">
+    <div className="mx-auto w-full max-w-3xl overflow-hidden">
       <Tabs
         className="w-full"
         value={selectedTab}
