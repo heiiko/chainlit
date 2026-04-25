@@ -57,6 +57,9 @@ from chainlit.types import (
     OutputAudioChunk,
     Starter,
     StarterCategory,
+    StarterWidget,
+    StarterWidgetHeader,
+    StarterWidgetTab,
 )
 from chainlit.user import PersistedUser, User
 from chainlit.user_session import user_session
@@ -93,6 +96,7 @@ from .callbacks import (
     set_chat_profiles,
     set_starter_categories,
     set_starters,
+    set_starter_widget,
 )
 
 if TYPE_CHECKING:
@@ -170,6 +174,9 @@ __all__ = [
     "SemanticKernelFilter",
     "Starter",
     "StarterCategory",
+    "StarterWidget",
+    "StarterWidgetHeader",
+    "StarterWidgetTab",
     "Step",
     "Task",
     "TaskList",
@@ -215,6 +222,7 @@ __all__ = [
     "set_chat_profiles",
     "set_starter_categories",
     "set_starters",
+    "set_starter_widget",
     "sleep",
     "step",
     "user_session",

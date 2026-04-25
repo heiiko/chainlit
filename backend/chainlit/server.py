@@ -802,6 +802,16 @@ async def project_translations(
     )
 
 
+def _serialize_starter_widget(widget):
+    if not widget:
+        return None
+
+    widget_dict = widget.to_dict() if hasattr(widget, "to_dict") else dict(widget)
+    if "initial_tab" in widget_dict:
+        widget_dict["initialTab"] = widget_dict.pop("initial_tab")
+    return widget_dict
+
+
 @router.get("/project/settings")
 async def project_settings(
     current_user: UserParam,
@@ -830,6 +840,9 @@ async def project_settings(
             for p in chat_profiles:
                 d = p.to_dict()
                 d.pop("config_overrides", None)
+                starter_widget = d.pop("starter_widget", None)
+                if starter_widget is not None:
+                    d["starterWidget"] = _serialize_starter_widget(starter_widget)
                 profiles.append(d)
 
     starters = []
@@ -845,6 +858,12 @@ async def project_settings(
         )
         if sc:
             starter_categories = [it.to_dict() for it in sc]
+
+    starter_widget = None
+    if config.code.set_starter_widget:
+        sw = await config.code.set_starter_widget(current_user, effective_language)
+        if sw is not None:
+            starter_widget = _serialize_starter_widget(sw)
 
     data_layer = get_data_layer()
     debug_url = (
@@ -876,6 +895,7 @@ async def project_settings(
             "chatProfiles": profiles,
             "starters": starters,
             "starterCategories": starter_categories,
+            "starterWidget": starter_widget,
             "debugUrl": debug_url,
         }
     )

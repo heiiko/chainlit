@@ -17,6 +17,7 @@ import {
 
 import { Logo } from '@/components/Logo';
 import { Markdown } from '@/components/Markdown';
+import WaterMark from '@/components/WaterMark';
 
 import MessageComposer from './MessageComposer';
 import Starters from './Starters';
@@ -44,6 +45,23 @@ export default function WelcomeScreen(props: Props) {
     setIsVisible(true);
   }, []);
 
+  const selectedChatProfile = useMemo(() => {
+    if (!chatProfile) return undefined;
+    return chatProfiles?.find((profile) => profile.name === chatProfile);
+  }, [chatProfile, chatProfiles]);
+
+  const hasStarterWidget = useMemo(() => {
+    if (selectedChatProfile?.starterWidget) {
+      return true;
+    }
+
+    if (selectedChatProfile?.starters?.length) {
+      return false;
+    }
+
+    return Boolean(config?.starterWidget?.tabs?.length);
+  }, [config, selectedChatProfile]);
+
   const logo = useMemo(() => {
     if (chatProfile && chatProfiles) {
       const currentChatProfile = chatProfiles.find(
@@ -62,6 +80,7 @@ export default function WelcomeScreen(props: Props) {
             />
             {currentChatProfile?.markdown_description ? (
               <Markdown
+                className="font-sans"
                 allowHtml={allowHtml}
                 latex={latex}
                 renderMarkdown={true}
@@ -77,19 +96,44 @@ export default function WelcomeScreen(props: Props) {
     return <Logo className="w-[200px] mb-2" />;
   }, [chatProfiles, chatProfile]);
 
-  if (hasMessage(messages)) return null;
+  const threadHasMessages = hasMessage(messages);
+
+  if (threadHasMessages && !hasStarterWidget) return null;
+
+  if (threadHasMessages) {
+    return (
+      <div
+        id="welcome-screen"
+        className={cn(
+          'flex w-full justify-center pb-8 welcome-screen transition-opacity duration-500 opacity-0 delay-100',
+          isVisible && 'opacity-100'
+        )}
+      >
+        <div className="flex flex-col gap-4 w-full items-center">
+          {logo}
+          <Starters />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
       id="welcome-screen"
       className={cn(
-        'flex flex-col -mt-[60px] gap-4 w-full flex-grow items-center justify-center welcome-screen mx-auto transition-opacity duration-500 opacity-0 delay-100',
+        'flex flex-col gap-4 w-full flex-grow welcome-screen mx-auto transition-opacity duration-500 opacity-0 delay-100',
         isVisible && 'opacity-100'
       )}
     >
-      {logo}
-      <MessageComposer {...props} />
-      <Starters />
+      <div className="flex flex-col gap-4 w-full items-center">
+        {logo}
+        {hasStarterWidget ? <Starters /> : null}
+        {hasStarterWidget ? null : <Starters />}
+      </div>
+      <div className="mt-auto flex flex-col items-center gap-2 w-full">
+        <MessageComposer {...props} />
+        <WaterMark />
+      </div>
     </div>
   );
 }
