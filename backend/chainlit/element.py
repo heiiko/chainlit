@@ -43,6 +43,7 @@ ElementType = Literal[
     "custom",
 ]
 ElementDisplay = Literal["inline", "side", "page"]
+CustomElementDisplay = Literal["inline", "side", "page", "tail"]
 ElementSize = Literal["small", "medium", "large"]
 
 
@@ -55,7 +56,7 @@ class ElementDict(TypedDict, total=False):
     url: Optional[str]
     objectKey: Optional[str]
     name: str
-    display: ElementDisplay
+    display: CustomElementDisplay
     size: Optional[ElementSize]
     language: Optional[str]
     page: Optional[int]
@@ -469,6 +470,7 @@ class CustomElement(Element):
     """Useful to send a custom element to the UI."""
 
     type: ClassVar[ElementType] = "custom"
+    display: CustomElementDisplay = Field(default="inline")
     mime: str = "application/json"
     props: Dict = Field(default_factory=dict)
 

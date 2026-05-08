@@ -23,6 +23,8 @@ export type IMessageElement =
 
 export type ElementType = IElement['type'];
 export type IElementSize = 'small' | 'medium' | 'large';
+export type IElementDisplay = 'inline' | 'side' | 'page';
+export type ICustomElementDisplay = IElementDisplay | 'tail';
 
 interface TElement<T> {
   id: string;
@@ -36,7 +38,7 @@ interface TElement<T> {
 
 interface TMessageElement<T> extends TElement<T> {
   name: string;
-  display: 'inline' | 'side' | 'page';
+  display: IElementDisplay;
 }
 
 export interface IImageElement extends TMessageElement<'image'> {
@@ -76,6 +78,10 @@ export type ITasklistElement = TElement<'tasklist'>;
 
 export type IDataframeElement = TMessageElement<'dataframe'>;
 
-export interface ICustomElement extends TMessageElement<'custom'> {
+export interface ICustomElement extends Omit<
+  TMessageElement<'custom'>,
+  'display'
+> {
+  display: ICustomElementDisplay;
   props: Record<string, unknown>;
 }

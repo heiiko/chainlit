@@ -4,9 +4,12 @@ import { memo, useContext, useMemo, useRef } from 'react';
 
 import {
   type IAction,
+  type ICustomElement,
   type IMessageElement,
   type IStep
 } from '@chainlit/react-client';
+
+import CustomElement from '@/components/Elements/CustomElement';
 
 import { useLayoutMaxWidth } from 'hooks/useLayoutMaxWidth';
 
@@ -30,6 +33,33 @@ interface Props {
 }
 
 const EMPTY_ELEMENTS: IMessageElement[] = [];
+
+const TailCustomElements = ({
+  elements,
+  messageId
+}: {
+  elements: IMessageElement[];
+  messageId: string;
+}) => {
+  const tailCustomElements = elements.filter(
+    (element): element is ICustomElement =>
+      element.type === 'custom' &&
+      element.display === 'tail' &&
+      element.forId === messageId
+  );
+
+  if (!tailCustomElements.length) {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-col gap-2 w-full">
+      {tailCustomElements.map((element) => (
+        <CustomElement key={element.id} element={element} />
+      ))}
+    </div>
+  );
+};
 
 const Message = memo(
   ({
@@ -181,6 +211,10 @@ const Message = memo(
                           scorableRun && isScorable ? scorableRun : undefined
                         }
                         contentRef={contentRef}
+                      />
+                      <TailCustomElements
+                        elements={elements}
+                        messageId={message.id}
                       />
                     </div>
                   )}
