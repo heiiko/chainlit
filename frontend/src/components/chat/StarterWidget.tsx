@@ -39,18 +39,16 @@ function StarterWidgetItem({ starter }: StarterWidgetItemProps) {
         'disabled:cursor-not-allowed disabled:opacity-50'
       )}
     >
-        {iconSrc ? (
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center">
-            <img className="h-8 w-8 rounded-sm" src={iconSrc} alt="" />
-          </span>
-        ) : (
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted">
-            <MessageCircle className="h-4 w-4" />
-          </span>
-        )}
-      <span className="text-sm font-medium leading-relaxed">
-        {starter.label}
-      </span>
+      {iconSrc ? (
+        <span className="flex h-16 w-16 shrink-0 items-center justify-center">
+          <img className="h-16 w-16 rounded-sm" src={iconSrc} alt="" />
+        </span>
+      ) : (
+        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-sm bg-muted">
+          <MessageCircle className="h-4 w-4" />
+        </span>
+      )}
+      <span className="font-medium leading-relaxed">{starter.label}</span>
     </button>
   );
 }
