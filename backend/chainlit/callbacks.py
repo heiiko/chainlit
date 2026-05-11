@@ -257,6 +257,33 @@ def set_chat_profiles(func):
 
 
 @overload
+def set_user_capabilities(
+    func: Callable[[Optional["User"]], Awaitable[Dict[str, Any]]],
+) -> Callable[[Optional["User"]], Awaitable[Dict[str, Any]]]: ...
+
+
+@overload
+def set_user_capabilities(
+    func: Callable[[Optional["User"], Optional["str"]], Awaitable[Dict[str, Any]]],
+) -> Callable[[Optional["User"], Optional["str"]], Awaitable[Dict[str, Any]]]: ...
+
+
+def set_user_capabilities(func):
+    """
+    Programmatic declaration of frontend-visible user capabilities.
+
+    Args:
+        func (Callable[[Optional["User"], Optional["str"]], Awaitable[Dict[str, Any]]]): The function declaring user capabilities.
+
+    Returns:
+        Callable[[Optional["User"], Optional["str"]], Awaitable[Dict[str, Any]]]: The decorated function.
+    """
+
+    config.code.set_user_capabilities = wrap_user_function(func)
+    return func
+
+
+@overload
 def set_starters(
     func: Callable[[Optional["User"]], Awaitable[List["Starter"]]],
 ) -> Callable[[Optional["User"]], Awaitable[List["Starter"]]]: ...

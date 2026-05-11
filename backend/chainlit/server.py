@@ -865,6 +865,14 @@ async def project_settings(
         if sw is not None:
             starter_widget = _serialize_starter_widget(sw)
 
+    user_capabilities = {}
+    if config.code.set_user_capabilities:
+        capabilities = await config.code.set_user_capabilities(
+            current_user, effective_language
+        )
+        if isinstance(capabilities, dict):
+            user_capabilities = capabilities
+
     data_layer = get_data_layer()
     debug_url = (
         await data_layer.build_debug_url() if data_layer and config.run.debug else None
@@ -896,6 +904,7 @@ async def project_settings(
             "starters": starters,
             "starterCategories": starter_categories,
             "starterWidget": starter_widget,
+            "userCapabilities": user_capabilities,
             "debugUrl": debug_url,
         }
     )

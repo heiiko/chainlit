@@ -46,6 +46,11 @@ export interface IAudioConfig {
   sample_rate: number;
 }
 
+export interface IUserCapabilities {
+  features?: Record<string, unknown>;
+  [key: string]: unknown;
+}
+
 export interface IAuthConfig {
   requireLogin: boolean;
   passwordAuth: boolean;
@@ -125,6 +130,7 @@ export interface IChainlitConfig {
   starters?: IStarter[];
   starterCategories?: IStarterCategory[];
   starterWidget?: IStarterWidget;
+  userCapabilities?: IUserCapabilities;
 
   translation: object;
 }

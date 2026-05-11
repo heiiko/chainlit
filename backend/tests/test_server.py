@@ -153,6 +153,30 @@ async def test_project_settings_with_starter_widget(
     assert data["starterWidget"]["initialTab"] == "trending"
 
 
+async def test_project_settings_with_user_capabilities(
+    test_client: TestClient,
+    mock_get_current_user: Mock,
+    test_config: ChainlitConfig,
+):
+    user = PersistedUser(
+        id="test_user_id",
+        createdAt=datetime.datetime.now().isoformat(),
+        identifier="test_user_identifier",
+        metadata={"access_claim": "base"},
+    )
+    mock_get_current_user.return_value = user
+    test_config.code.set_user_capabilities = AsyncMock(
+        return_value={"features": {"voice_interaction": False}}
+    )
+
+    response = test_client.get("/project/settings?language=nl-BE")
+
+    assert response.status_code == 200, response.json()
+    data = response.json()
+    assert data["userCapabilities"] == {"features": {"voice_interaction": False}}
+    test_config.code.set_user_capabilities.assert_awaited_once_with(user, "nl-BE")
+
+
 def test_project_settings_path_traversal(
     test_client: TestClient,
     mock_get_current_user: Mock,

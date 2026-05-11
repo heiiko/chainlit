@@ -411,6 +411,9 @@ class CodeSettings(BaseModel):
     set_chat_profiles: Optional[
         Callable[[Optional["User"], Optional["str"]], Awaitable[List["ChatProfile"]]]
     ] = None
+    set_user_capabilities: Optional[
+        Callable[[Optional["User"], Optional["str"]], Awaitable[Dict[str, Any]]]
+    ] = None
     set_starters: Optional[
         Callable[[Optional["User"], Optional["str"]], Awaitable[List["Starter"]]]
     ] = None

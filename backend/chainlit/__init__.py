@@ -97,6 +97,7 @@ from .callbacks import (
     set_starter_categories,
     set_starters,
     set_starter_widget,
+    set_user_capabilities,
 )
 
 if TYPE_CHECKING:
@@ -223,6 +224,7 @@ __all__ = [
     "set_starter_categories",
     "set_starters",
     "set_starter_widget",
+    "set_user_capabilities",
     "sleep",
     "step",
     "user_session",
