@@ -1,15 +1,8 @@
 import { cn, hasMessage } from '@/lib/utils';
-import {
-  MutableRefObject,
-  useContext,
-  useEffect,
-  useMemo,
-  useState
-} from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 import {
   ChainlitContext,
-  FileSpec,
   useChatMessages,
   useChatSession,
   useConfig
@@ -17,19 +10,10 @@ import {
 
 import { Logo } from '@/components/Logo';
 import { Markdown } from '@/components/Markdown';
-import WaterMark from '@/components/WaterMark';
 
-import MessageComposer from './MessageComposer';
 import Starters from './Starters';
 
-interface Props {
-  fileSpec: FileSpec;
-  onFileUpload: (payload: File[]) => void;
-  onFileUploadError: (error: string) => void;
-  autoScrollRef: MutableRefObject<boolean>;
-}
-
-export default function WelcomeScreen(props: Props) {
+export default function WelcomeScreen() {
   const apiClient = useContext(ChainlitContext);
   const { config } = useConfig();
   const { chatProfile } = useChatSession();
@@ -129,10 +113,6 @@ export default function WelcomeScreen(props: Props) {
         {logo}
         {hasStarterWidget ? <Starters /> : null}
         {hasStarterWidget ? null : <Starters />}
-      </div>
-      <div className="mt-auto flex flex-col items-center gap-2 w-full">
-        <MessageComposer {...props} />
-        <WaterMark />
       </div>
     </div>
   );

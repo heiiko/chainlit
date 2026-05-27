@@ -195,10 +195,13 @@ export default function ScrollContainer({
   };
 
   return (
-    <div className="relative flex flex-col flex-grow overflow-y-auto">
+    <div className="relative flex min-h-0 flex-col flex-grow overflow-y-auto">
       <div
         ref={ref}
-        className={cn('flex flex-col flex-grow overflow-y-auto', className)}
+        className={cn(
+          'flex min-h-0 flex-col flex-grow overflow-y-auto',
+          className
+        )}
         onScroll={handleScroll}
       >
         {children}
