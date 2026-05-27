@@ -1,6 +1,12 @@
 import { cn } from '@/lib/utils';
 import { MessageCircle } from 'lucide-react';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import {
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 
 import {
   ChainlitContext,
@@ -20,11 +26,15 @@ const COMPACT_STARTER_WIDGET_BREAKPOINT = 380;
 const COMPACT_STARTER_WIDGET_LIMIT = 4;
 
 interface StarterWidgetItemProps {
+  autoScrollRef?: MutableRefObject<boolean>;
   starter: IStarter;
 }
 
-function StarterWidgetItem({ starter }: StarterWidgetItemProps) {
-  const { apiClient, disabled, onSubmit } = useStarterAction(starter);
+function StarterWidgetItem({ autoScrollRef, starter }: StarterWidgetItemProps) {
+  const { apiClient, disabled, onSubmit } = useStarterAction(
+    starter,
+    autoScrollRef
+  );
   const iconSrc = resolveStarterIconUrl(apiClient, starter.icon);
 
   return (
@@ -54,10 +64,11 @@ function StarterWidgetItem({ starter }: StarterWidgetItemProps) {
 }
 
 interface Props {
+  autoScrollRef?: MutableRefObject<boolean>;
   widget: IStarterWidget;
 }
 
-export default function StarterWidget({ widget }: Props) {
+export default function StarterWidget({ autoScrollRef, widget }: Props) {
   const apiClient = useContext(ChainlitContext);
   const tabs = widget.tabs || [];
   const [isCompactScreen, setIsCompactScreen] = useState(false);
@@ -132,7 +143,11 @@ export default function StarterWidget({ widget }: Props) {
                 ? tab.starters.slice(0, COMPACT_STARTER_WIDGET_LIMIT)
                 : tab.starters
               ).map((starter) => (
-                <StarterWidgetItem key={starter.label} starter={starter} />
+                <StarterWidgetItem
+                  autoScrollRef={autoScrollRef}
+                  key={starter.label}
+                  starter={starter}
+                />
               ))}
             </div>
           </TabsContent>

@@ -39,7 +39,17 @@ vi.mock('@/components/chat/MessageComposer', () => ({
 }));
 
 vi.mock('@/components/chat/Starters', () => ({
-  default: () => <div data-testid="starters" id="starters" />
+  default: ({
+    autoScrollRef
+  }: {
+    autoScrollRef?: React.MutableRefObject<boolean>;
+  }) => (
+    <div
+      data-testid="starters"
+      data-autoscroll-ref={autoScrollRef ? 'true' : 'false'}
+      id="starters"
+    />
+  )
 }));
 
 describe('WelcomeScreen', () => {
@@ -61,5 +71,35 @@ describe('WelcomeScreen', () => {
     expect(
       container.querySelector('#welcome-screen #message-composer')
     ).not.toBeInTheDocument();
+  });
+
+  it('passes the shared autoscroll ref to starter buttons when the starter widget remains visible', () => {
+    const autoScrollRef = { current: false };
+    (useChatMessages as any).mockReturnValue({
+      messages: [{ id: 'message-id', type: 'user_message', output: 'hello' }]
+    });
+    (useChatSession as any).mockReturnValue({ chatProfile: undefined });
+    (useConfig as any).mockReturnValue({
+      config: {
+        chatProfiles: [],
+        starterWidget: {
+          tabs: [
+            {
+              key: 'news',
+              label: 'News',
+              starters: [{ label: 'Top stories', message: 'Top stories' }]
+            }
+          ]
+        }
+      }
+    });
+
+    const WelcomeScreenWithProps = WelcomeScreen as any;
+    render(<WelcomeScreenWithProps autoScrollRef={autoScrollRef} />);
+
+    expect(screen.getByTestId('starters')).toHaveAttribute(
+      'data-autoscroll-ref',
+      'true'
+    );
   });
 });

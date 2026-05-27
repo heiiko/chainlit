@@ -1,5 +1,11 @@
 import { cn, hasMessage } from '@/lib/utils';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import {
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 
 import {
   ChainlitContext,
@@ -13,7 +19,11 @@ import { Markdown } from '@/components/Markdown';
 
 import Starters from './Starters';
 
-export default function WelcomeScreen() {
+interface Props {
+  autoScrollRef?: MutableRefObject<boolean>;
+}
+
+export default function WelcomeScreen({ autoScrollRef }: Props) {
   const apiClient = useContext(ChainlitContext);
   const { config } = useConfig();
   const { chatProfile } = useChatSession();
@@ -95,7 +105,7 @@ export default function WelcomeScreen() {
       >
         <div className="flex flex-col gap-4 w-full items-center">
           {logo}
-          <Starters />
+          <Starters autoScrollRef={autoScrollRef} />
         </div>
       </div>
     );
@@ -111,8 +121,8 @@ export default function WelcomeScreen() {
     >
       <div className="flex flex-col gap-4 w-full items-center">
         {logo}
-        {hasStarterWidget ? <Starters /> : null}
-        {hasStarterWidget ? null : <Starters />}
+        {hasStarterWidget ? <Starters autoScrollRef={autoScrollRef} /> : null}
+        {hasStarterWidget ? null : <Starters autoScrollRef={autoScrollRef} />}
       </div>
     </div>
   );

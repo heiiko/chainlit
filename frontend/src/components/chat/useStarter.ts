@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react';
+import { MutableRefObject, useCallback, useContext } from 'react';
 import { useRecoilValue } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -26,7 +26,10 @@ export function resolveStarterIconUrl(
   return icon.startsWith('/public') ? apiClient.buildEndpoint(icon) : icon;
 }
 
-export function useStarterAction(starter: IStarter) {
+export function useStarterAction(
+  starter: IStarter,
+  autoScrollRef?: MutableRefObject<boolean>
+) {
   const apiClient = useContext(ChainlitContext);
   const selectedCommand = useRecoilValue(persistentCommandState);
   const modes = useRecoilValue(modesState);
@@ -58,8 +61,11 @@ export function useStarterAction(starter: IStarter) {
       metadata: { location: window.location.href }
     };
 
+    if (autoScrollRef) {
+      autoScrollRef.current = true;
+    }
     sendMessage(message, []);
-  }, [modes, selectedCommand, sendMessage, starter, user]);
+  }, [autoScrollRef, modes, selectedCommand, sendMessage, starter, user]);
 
   return {
     apiClient,

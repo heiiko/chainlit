@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { useMemo, useState } from 'react';
+import { MutableRefObject, useMemo, useState } from 'react';
 
 import { useChatSession, useConfig } from '@chainlit/react-client';
 
@@ -8,10 +8,11 @@ import StarterCategory from './StarterCategory';
 import StarterWidget from './StarterWidget';
 
 interface Props {
+  autoScrollRef?: MutableRefObject<boolean>;
   className?: string;
 }
 
-export default function Starters({ className }: Props) {
+export default function Starters({ autoScrollRef, className }: Props) {
   const { chatProfile } = useChatSession();
   const { config } = useConfig();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -56,7 +57,7 @@ export default function Starters({ className }: Props) {
   if (starterWidget?.tabs?.length) {
     return (
       <div id="starters" className={cn('flex w-full', className)}>
-        <StarterWidget widget={starterWidget} />
+        <StarterWidget autoScrollRef={autoScrollRef} widget={starterWidget} />
       </div>
     );
   }
@@ -89,7 +90,11 @@ export default function Starters({ className }: Props) {
           {selectedCategoryData?.starters?.length && (
             <div className="flex gap-2 justify-center flex-wrap">
               {selectedCategoryData.starters.map((starter) => (
-                <Starter key={starter.label} starter={starter} />
+                <Starter
+                  autoScrollRef={autoScrollRef}
+                  key={starter.label}
+                  starter={starter}
+                />
               ))}
             </div>
           )}
@@ -104,7 +109,7 @@ export default function Starters({ className }: Props) {
     <div id="starters" className={cn('flex w-full justify-center', className)}>
       <div className="flex gap-2 justify-center flex-wrap">
         {starters.map((starter, i) => (
-          <Starter key={i} starter={starter} />
+          <Starter autoScrollRef={autoScrollRef} key={i} starter={starter} />
         ))}
       </div>
     </div>

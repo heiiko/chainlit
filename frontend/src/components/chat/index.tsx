@@ -220,13 +220,13 @@ const Chat = () => {
           autoScrollRef={autoScrollRef}
         >
           <div
-            className="flex min-h-0 flex-col mx-auto w-full flex-grow p-4"
+            className="flex flex-col mx-auto w-full flex-grow p-4"
             style={{
               maxWidth: layoutMaxWidth
             }}
           >
             <TaskList isMobile={true} />
-            <WelcomeScreen />
+            <WelcomeScreen autoScrollRef={autoScrollRef} />
             <MessagesContainer navigate={navigate} />
           </div>
         </ScrollContainer>

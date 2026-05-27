@@ -30,48 +30,136 @@ export default function ScrollContainer({
   const ref = useRef<HTMLDivElement>(null);
   const spacerRef = useRef<HTMLDivElement>(null);
   const lastUserMessageRef = useRef<HTMLDivElement | null>(null);
+  const positionedUserMessageRef = useRef<HTMLDivElement | null>(null);
+  const pendingPositionScrollFrameRef = useRef<number | null>(null);
   const { messages } = useChatMessages();
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
 
-  // Calculate and update spacer height
-  const updateSpacerHeight = useCallback(() => {
+  const cancelPendingPositionScroll = useCallback(() => {
+    if (pendingPositionScrollFrameRef.current === null) return;
+
+    window.cancelAnimationFrame(pendingPositionScrollFrameRef.current);
+    pendingPositionScrollFrameRef.current = null;
+  }, []);
+
+  const checkScrollEnd = useCallback(function checkScrollEnd() {
     if (!ref.current) return;
 
-    if (autoScrollUserMessage && lastUserMessageRef.current) {
-      const containerHeight = ref.current.clientHeight;
-      const lastMessageHeight = lastUserMessageRef.current.offsetHeight;
+    const prevScrollTop = ref.current.scrollTop;
 
-      // Calculate the height of all elements after the last user message
-      let afterMessagesHeight = 0;
-      let currentElement = lastUserMessageRef.current.nextElementSibling;
+    setTimeout(() => {
+      if (!ref.current) return;
 
-      // Iterate through all siblings after the last user message
-      while (currentElement && currentElement !== spacerRef.current) {
-        afterMessagesHeight += (currentElement as HTMLElement).offsetHeight;
-        currentElement = currentElement.nextElementSibling;
+      const currentScrollTop = ref.current.scrollTop;
+      if (currentScrollTop === prevScrollTop) {
+        setIsScrolling(false);
+
+        const { scrollTop, scrollHeight, clientHeight } = ref.current;
+        const atBottom = scrollTop + clientHeight >= scrollHeight - 10;
+        setShowScrollButton(!atBottom);
+      } else {
+        checkScrollEnd();
+      }
+    }, 100);
+  }, []);
+
+  const scrollToPosition = useCallback(
+    (behavior: ScrollBehavior = 'auto') => {
+      if (!ref.current || !lastUserMessageRef.current) return;
+
+      setIsScrolling(true);
+      // Scroll to position the last user message at the top with some padding
+      const scrollPosition = lastUserMessageRef.current.offsetTop - 20;
+
+      ref.current.scrollTo({
+        top: scrollPosition,
+        behavior
+      });
+
+      if (autoScrollRef) {
+        autoScrollRef.current = false;
       }
 
-      // Position the last user message at the top with some padding
-      // Subtract both the message height and the height of any messages after it
-      const newSpacerHeight =
-        containerHeight - lastMessageHeight - afterMessagesHeight - 32;
+      setShowScrollButton(false);
+      checkScrollEnd();
+    },
+    [autoScrollRef, checkScrollEnd]
+  );
 
-      // Only set a positive spacer height
-      if (spacerRef.current) {
-        spacerRef.current.style.height = `${Math.max(0, newSpacerHeight)}px`;
+  const queueScrollToPosition = useCallback(
+    (behavior: ScrollBehavior = 'auto') => {
+      cancelPendingPositionScroll();
+
+      if (typeof window.requestAnimationFrame !== 'function') {
+        setTimeout(() => scrollToPosition(behavior), 0);
+        return;
       }
 
-      // Scroll to position the message at the top
-      if (afterMessagesHeight === 0) {
-        scrollToPosition();
+      pendingPositionScrollFrameRef.current = window.requestAnimationFrame(
+        () => {
+          pendingPositionScrollFrameRef.current = window.requestAnimationFrame(
+            () => {
+              pendingPositionScrollFrameRef.current = null;
+              scrollToPosition(behavior);
+            }
+          );
+        }
+      );
+    },
+    [cancelPendingPositionScroll, scrollToPosition]
+  );
+
+  // Calculate and update spacer height
+  const updateSpacerHeight = useCallback(
+    (forceUserMessageScroll = false) => {
+      if (!ref.current) return;
+
+      if (autoScrollUserMessage && lastUserMessageRef.current) {
+        const containerHeight = ref.current.clientHeight;
+        const lastMessageHeight = lastUserMessageRef.current.offsetHeight;
+
+        // Calculate the height of all elements after the last user message
+        let afterMessagesHeight = 0;
+        let currentElement = lastUserMessageRef.current.nextElementSibling;
+
+        // Iterate through all siblings after the last user message
+        while (currentElement && currentElement !== spacerRef.current) {
+          afterMessagesHeight += (currentElement as HTMLElement).offsetHeight;
+          currentElement = currentElement.nextElementSibling;
+        }
+
+        // Position the last user message at the top with some padding
+        // Subtract both the message height and the height of any messages after it
+        const newSpacerHeight =
+          containerHeight - lastMessageHeight - afterMessagesHeight - 32;
+
+        // Only set a positive spacer height
+        if (spacerRef.current) {
+          spacerRef.current.style.height = `${Math.max(0, newSpacerHeight)}px`;
+        }
+
+        // Scroll to position the message at the top
+        if (forceUserMessageScroll || afterMessagesHeight === 0) {
+          queueScrollToPosition();
+        } else if (autoScrollAssistantMessage && autoScrollRef?.current) {
+          ref.current.scrollTop = ref.current.scrollHeight;
+        }
       } else if (autoScrollAssistantMessage && autoScrollRef?.current) {
         ref.current.scrollTop = ref.current.scrollHeight;
       }
-    } else if (autoScrollAssistantMessage && autoScrollRef?.current) {
-      ref.current.scrollTop = ref.current.scrollHeight;
-    }
-  }, [autoScrollUserMessage, autoScrollAssistantMessage, autoScrollRef]);
+    },
+    [
+      autoScrollUserMessage,
+      autoScrollAssistantMessage,
+      autoScrollRef,
+      queueScrollToPosition
+    ]
+  );
+
+  useEffect(() => {
+    return () => cancelPendingPositionScroll();
+  }, [cancelPendingPositionScroll]);
 
   // Find and set a ref to the last user message element
   useEffect(() => {
@@ -90,10 +178,14 @@ export default function ScrollContainer({
       const lastUserMessage = userMessages[
         userMessages.length - 1
       ] as HTMLDivElement;
+      const shouldPositionUserMessage =
+        positionedUserMessageRef.current !== lastUserMessage;
+
       lastUserMessageRef.current = lastUserMessage;
 
       // Update spacer height when last user message is found
-      updateSpacerHeight();
+      updateSpacerHeight(shouldPositionUserMessage);
+      positionedUserMessageRef.current = lastUserMessage;
     }
   }, [messages, updateSpacerHeight]);
 
@@ -128,27 +220,6 @@ export default function ScrollContainer({
     }, 500);
   }, []);
 
-  const checkScrollEnd = () => {
-    if (!ref.current) return;
-
-    const prevScrollTop = ref.current.scrollTop;
-
-    setTimeout(() => {
-      if (!ref.current) return;
-
-      const currentScrollTop = ref.current.scrollTop;
-      if (currentScrollTop === prevScrollTop) {
-        setIsScrolling(false);
-
-        const { scrollTop, scrollHeight, clientHeight } = ref.current;
-        const atBottom = scrollTop + clientHeight >= scrollHeight - 10;
-        setShowScrollButton(!atBottom);
-      } else {
-        checkScrollEnd();
-      }
-    }, 100);
-  };
-
   const scrollToBottom = () => {
     if (!ref.current) return;
 
@@ -161,22 +232,6 @@ export default function ScrollContainer({
     if (autoScrollRef) {
       autoScrollRef.current = true;
     }
-
-    setShowScrollButton(false);
-    checkScrollEnd();
-  };
-
-  const scrollToPosition = () => {
-    if (!ref.current || !lastUserMessageRef.current) return;
-
-    setIsScrolling(true);
-    // Scroll to position the last user message at the top with some padding
-    const scrollPosition = lastUserMessageRef.current.offsetTop - 20;
-
-    ref.current.scrollTo({
-      top: scrollPosition,
-      behavior: 'smooth'
-    });
 
     setShowScrollButton(false);
     checkScrollEnd();

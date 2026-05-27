@@ -1,3 +1,5 @@
+import { MutableRefObject } from 'react';
+
 import { IStarter } from '@chainlit/react-client';
 
 import { Button } from '@/components/ui/button';
@@ -9,11 +11,15 @@ import {
 } from './useStarter';
 
 interface StarterProps {
+  autoScrollRef?: MutableRefObject<boolean>;
   starter: IStarter;
 }
 
-export default function Starter({ starter }: StarterProps) {
-  const { apiClient, disabled, onSubmit } = useStarterAction(starter);
+export default function Starter({ autoScrollRef, starter }: StarterProps) {
+  const { apiClient, disabled, onSubmit } = useStarterAction(
+    starter,
+    autoScrollRef
+  );
 
   return (
     <Button

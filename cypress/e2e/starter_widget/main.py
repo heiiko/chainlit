@@ -15,6 +15,12 @@ async def starter_widget():
                 starters=[
                     cl.Starter(label="Top stories", message="Top stories"),
                     cl.Starter(label="Morning briefing", message="Morning briefing"),
+                    cl.Starter(label="Policy watch", message="Policy watch"),
+                    cl.Starter(label="Tech briefing", message="Tech briefing"),
+                    cl.Starter(label="Energy update", message="Energy update"),
+                    cl.Starter(label="Banking watch", message="Banking watch"),
+                    cl.Starter(label="Retail roundup", message="Retail roundup"),
+                    cl.Starter(label="Real estate notes", message="Real estate notes"),
                 ],
             ),
             cl.StarterWidgetTab(
