@@ -3,10 +3,17 @@ import { useEffect, useMemo, useState } from 'react';
 import Starters from '@chainlit/app/src/components/chat/Starters';
 import { cn, hasMessage } from '@chainlit/app/src/lib/utils';
 import {
+  IStarterWidget,
   useChatMessages,
   useChatSession,
   useConfig
 } from '@chainlit/react-client';
+
+function hasStarterWidgetContent(widget?: IStarterWidget) {
+  return Boolean(
+    widget?.tabs?.length || widget?.articleBriefings?.articles?.length
+  );
+}
 
 export default function WelcomeScreen() {
   const { config } = useConfig();
@@ -25,14 +32,14 @@ export default function WelcomeScreen() {
 
   const hasStarterWidget = useMemo(() => {
     if (selectedChatProfile?.starterWidget) {
-      return true;
+      return hasStarterWidgetContent(selectedChatProfile.starterWidget);
     }
 
     if (selectedChatProfile?.starters?.length) {
       return false;
     }
 
-    return Boolean(config?.starterWidget?.tabs?.length);
+    return hasStarterWidgetContent(config?.starterWidget);
   }, [config, selectedChatProfile]);
 
   const threadHasMessages = hasMessage(messages);

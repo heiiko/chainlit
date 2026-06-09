@@ -9,6 +9,7 @@ import {
 
 import {
   ChainlitContext,
+  IStarterWidget,
   useChatMessages,
   useChatSession,
   useConfig
@@ -21,6 +22,12 @@ import Starters from './Starters';
 
 interface Props {
   autoScrollRef?: MutableRefObject<boolean>;
+}
+
+function hasStarterWidgetContent(widget?: IStarterWidget) {
+  return Boolean(
+    widget?.tabs?.length || widget?.articleBriefings?.articles?.length
+  );
 }
 
 export default function WelcomeScreen({ autoScrollRef }: Props) {
@@ -46,14 +53,14 @@ export default function WelcomeScreen({ autoScrollRef }: Props) {
 
   const hasStarterWidget = useMemo(() => {
     if (selectedChatProfile?.starterWidget) {
-      return true;
+      return hasStarterWidgetContent(selectedChatProfile.starterWidget);
     }
 
     if (selectedChatProfile?.starters?.length) {
       return false;
     }
 
-    return Boolean(config?.starterWidget?.tabs?.length);
+    return hasStarterWidgetContent(config?.starterWidget);
   }, [config, selectedChatProfile]);
 
   const logo = useMemo(() => {

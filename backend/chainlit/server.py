@@ -809,6 +809,19 @@ def _serialize_starter_widget(widget):
     widget_dict = widget.to_dict() if hasattr(widget, "to_dict") else dict(widget)
     if "initial_tab" in widget_dict:
         widget_dict["initialTab"] = widget_dict.pop("initial_tab")
+    if "article_briefings" in widget_dict:
+        article_briefings = widget_dict.pop("article_briefings")
+        if article_briefings is not None:
+            if "audio_action_name" in article_briefings:
+                article_briefings["audioActionName"] = article_briefings.pop(
+                    "audio_action_name"
+                )
+            for article in article_briefings.get("articles") or []:
+                if "image_url" in article:
+                    article["imageUrl"] = article.pop("image_url")
+                if "article_url" in article:
+                    article["articleUrl"] = article.pop("article_url")
+            widget_dict["articleBriefings"] = article_briefings
     return widget_dict
 
 

@@ -329,6 +329,27 @@ class StarterWidgetTab(DataClassJsonMixin):
 
 
 @dataclass
+class StarterWidgetArticleBriefing(DataClassJsonMixin):
+    """A compact article briefing rendered below starter tabs."""
+
+    headline: str
+    bullets: List[str] = field(default_factory=list)
+    image_url: Optional[str] = None
+    article_url: Optional[str] = None
+    urn: Optional[str] = None
+
+
+@dataclass
+class StarterWidgetArticleBriefings(DataClassJsonMixin):
+    """Optional article briefing section displayed under a starter widget."""
+
+    title: Optional[str] = None
+    articles: List[StarterWidgetArticleBriefing] = field(default_factory=list)
+    labels: Dict[str, str] = field(default_factory=dict)
+    audio_action_name: Optional[str] = None
+
+
+@dataclass
 class StarterWidget(DataClassJsonMixin):
     """A structured starter widget rendered on the welcome screen."""
 
@@ -336,6 +357,7 @@ class StarterWidget(DataClassJsonMixin):
     tabs: List[StarterWidgetTab] = field(default_factory=list)
     header: Optional[StarterWidgetHeader] = None
     initial_tab: Optional[str] = None
+    article_briefings: Optional[StarterWidgetArticleBriefings] = None
 
 
 @dataclass

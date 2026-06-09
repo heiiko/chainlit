@@ -24,11 +24,30 @@ export interface IStarterWidgetTab {
   starters: IStarter[];
 }
 
+export interface IStarterWidgetArticleBriefing {
+  headline: string;
+  bullets: string[];
+  imageUrl?: string;
+  articleUrl?: string;
+  urn?: string;
+}
+
+export interface IStarterWidgetArticleBriefings {
+  title?: string;
+  articles: IStarterWidgetArticleBriefing[];
+  labels?: {
+    listen?: string;
+    open?: string;
+  };
+  audioActionName?: string;
+}
+
 export interface IStarterWidget {
   type?: 'tabs';
   header?: IStarterWidgetHeader;
-  tabs: IStarterWidgetTab[];
+  tabs?: IStarterWidgetTab[];
   initialTab?: string;
+  articleBriefings?: IStarterWidgetArticleBriefings;
 }
 
 export interface ChatProfile {

@@ -58,6 +58,8 @@ from chainlit.types import (
     Starter,
     StarterCategory,
     StarterWidget,
+    StarterWidgetArticleBriefing,
+    StarterWidgetArticleBriefings,
     StarterWidgetHeader,
     StarterWidgetTab,
 )
@@ -95,8 +97,8 @@ from .callbacks import (
     send_window_message,
     set_chat_profiles,
     set_starter_categories,
-    set_starters,
     set_starter_widget,
+    set_starters,
     set_user_capabilities,
 )
 
@@ -176,6 +178,8 @@ __all__ = [
     "Starter",
     "StarterCategory",
     "StarterWidget",
+    "StarterWidgetArticleBriefing",
+    "StarterWidgetArticleBriefings",
     "StarterWidgetHeader",
     "StarterWidgetTab",
     "Step",
@@ -222,8 +226,8 @@ __all__ = [
     "send_window_message",
     "set_chat_profiles",
     "set_starter_categories",
-    "set_starters",
     "set_starter_widget",
+    "set_starters",
     "set_user_capabilities",
     "sleep",
     "step",

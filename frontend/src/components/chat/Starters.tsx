@@ -1,7 +1,11 @@
 import { cn } from '@/lib/utils';
 import { MutableRefObject, useMemo, useState } from 'react';
 
-import { useChatSession, useConfig } from '@chainlit/react-client';
+import {
+  IStarterWidget,
+  useChatSession,
+  useConfig
+} from '@chainlit/react-client';
 
 import Starter from './Starter';
 import StarterCategory from './StarterCategory';
@@ -10,6 +14,12 @@ import StarterWidget from './StarterWidget';
 interface Props {
   autoScrollRef?: MutableRefObject<boolean>;
   className?: string;
+}
+
+function hasStarterWidgetContent(widget?: IStarterWidget) {
+  return Boolean(
+    widget?.tabs?.length || widget?.articleBriefings?.articles?.length
+  );
 }
 
 export default function Starters({ autoScrollRef, className }: Props) {
@@ -50,11 +60,12 @@ export default function Starters({ autoScrollRef, className }: Props) {
     return config?.starters;
   }, [config, selectedChatProfile]);
 
-  const starterCategories = starterWidget
+  const hasNativeStarterWidget = hasStarterWidgetContent(starterWidget);
+  const starterCategories = hasNativeStarterWidget
     ? undefined
     : config?.starterCategories;
 
-  if (starterWidget?.tabs?.length) {
+  if (hasNativeStarterWidget && starterWidget) {
     return (
       <div id="starters" className={cn('flex w-full', className)}>
         <StarterWidget autoScrollRef={autoScrollRef} widget={starterWidget} />

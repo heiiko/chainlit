@@ -125,6 +125,8 @@ async def test_project_settings_with_starter_widget(
     from chainlit.types import (
         Starter,
         StarterWidget,
+        StarterWidgetArticleBriefing,
+        StarterWidgetArticleBriefings,
         StarterWidgetHeader,
         StarterWidgetTab,
     )
@@ -140,6 +142,27 @@ async def test_project_settings_with_starter_widget(
                 )
             ],
             initial_tab="trending",
+            article_briefings=StarterWidgetArticleBriefings(
+                title="Hoofdpunten",
+                audio_action_name="readaloud_action",
+                labels={
+                    "listen": "Voorlezen",
+                    "open": "Lees het artikel",
+                },
+                articles=[
+                    StarterWidgetArticleBriefing(
+                        headline="Chipsector trekt de beurs hoger",
+                        bullets=[
+                            "De technologiesector wint terrein.",
+                            "Beleggers kijken naar nieuwe cijfers.",
+                            "Analisten blijven voorzichtig.",
+                        ],
+                        image_url="https://img.test/chips.jpg",
+                        article_url="https://www.tijd.be/chips",
+                        urn="urn:article:1",
+                    )
+                ],
+            ),
         )
     )
 
@@ -151,6 +174,20 @@ async def test_project_settings_with_starter_widget(
     assert data["starterWidget"]["tabs"][0]["key"] == "trending"
     assert data["starterWidget"]["tabs"][0]["starters"][0]["label"] == "Top stories"
     assert data["starterWidget"]["initialTab"] == "trending"
+    assert data["starterWidget"]["articleBriefings"]["title"] == "Hoofdpunten"
+    assert (
+        data["starterWidget"]["articleBriefings"]["audioActionName"]
+        == "readaloud_action"
+    )
+    assert data["starterWidget"]["articleBriefings"]["labels"]["listen"] == "Voorlezen"
+    assert (
+        data["starterWidget"]["articleBriefings"]["articles"][0]["imageUrl"]
+        == "https://img.test/chips.jpg"
+    )
+    assert (
+        data["starterWidget"]["articleBriefings"]["articles"][0]["articleUrl"]
+        == "https://www.tijd.be/chips"
+    )
 
 
 async def test_project_settings_with_user_capabilities(

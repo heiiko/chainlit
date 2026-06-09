@@ -102,4 +102,30 @@ describe('WelcomeScreen', () => {
       'true'
     );
   });
+
+  it('keeps the starter widget visible when it only contains article briefings', () => {
+    (useChatMessages as any).mockReturnValue({
+      messages: [{ id: 'message-id', type: 'user_message', output: 'hello' }]
+    });
+    (useChatSession as any).mockReturnValue({ chatProfile: undefined });
+    (useConfig as any).mockReturnValue({
+      config: {
+        chatProfiles: [],
+        starterWidget: {
+          articleBriefings: {
+            articles: [
+              {
+                headline: 'Market update',
+                bullets: ['One', 'Two', 'Three']
+              }
+            ]
+          }
+        }
+      }
+    });
+
+    render(<WelcomeScreen />);
+
+    expect(screen.getByTestId('starters')).toBeInTheDocument();
+  });
 });
