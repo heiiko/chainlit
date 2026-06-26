@@ -20,6 +20,9 @@ export interface IStarterWidgetHeader {
 export interface IStarterWidgetTab {
   key: string;
   label: string;
+  heading?: string;
+  byline?: string;
+  variant?: 'pills' | 'list';
   icon?: string;
   starters: IStarter[];
 }

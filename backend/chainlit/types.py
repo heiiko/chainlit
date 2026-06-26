@@ -324,6 +324,9 @@ class StarterWidgetTab(DataClassJsonMixin):
 
     key: str
     label: str
+    heading: Optional[str] = None
+    byline: Optional[str] = None
+    variant: Optional[Literal["pills", "list"]] = None
     icon: Optional[str] = None
     starters: List[Starter] = field(default_factory=list)
 

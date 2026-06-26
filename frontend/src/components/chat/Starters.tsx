@@ -17,9 +17,7 @@ interface Props {
 }
 
 function hasStarterWidgetContent(widget?: IStarterWidget) {
-  return Boolean(
-    widget?.tabs?.length || widget?.articleBriefings?.articles?.length
-  );
+  return Boolean(widget?.tabs?.some((tab) => tab.starters.length));
 }
 
 export default function Starters({ autoScrollRef, className }: Props) {

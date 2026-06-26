@@ -49,7 +49,7 @@ describe('StarterWidget', () => {
     }));
   });
 
-  it('enables autoscroll before sending a starter message', () => {
+  it('renders all starter sections in one overview and sends starter messages', () => {
     const autoScrollRef = { current: false };
     const StarterWidgetWithProps = StarterWidget as any;
 
@@ -60,12 +60,33 @@ describe('StarterWidget', () => {
           widget={{
             tabs: [
               {
-                key: 'news',
-                label: 'News',
+                key: 'while-you-were-away',
+                label: 'Wat heb ik gemist?',
+                heading: 'Wat heb ik gemist?',
+                byline: 'Krijg een samenvatting van de voorbije 24 uur',
+                variant: 'pills',
                 starters: [
                   {
-                    label: 'Top stories',
-                    message: 'Tell me the top stories'
+                    label: 'In het nieuws (voorbije 24 uur)',
+                    message: 'Vat het nieuws samen'
+                  },
+                  {
+                    label: 'Markten (voorbije 24 uur)',
+                    message: 'Vat de markten samen'
+                  }
+                ]
+              },
+              {
+                key: 'trending-questions',
+                label: 'In het nieuws',
+                heading: 'Actuele vragen',
+                byline: 'Op basis van het nieuws van vandaag',
+                variant: 'list',
+                starters: [
+                  {
+                    label: 'Waarom groeit de chipsector?',
+                    message: 'Waarom groeit de chipsector?',
+                    icon: 'https://img.test/chips.jpg'
                   }
                 ]
               }
@@ -75,19 +96,39 @@ describe('StarterWidget', () => {
       </RecoilRoot>
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Top stories' }));
+    expect(
+      screen.getByRole('heading', { name: 'Wat heb ik gemist?' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Krijg een samenvatting van de voorbije 24 uur')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Actuele vragen' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Op basis van het nieuws van vandaag')
+    ).toBeInTheDocument();
+    expect(screen.queryByRole('tablist')).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'In het nieuws' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Waarom groeit de chipsector?' })
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'In het nieuws' }));
 
     expect(autoScrollRef.current).toBe(true);
     expect(sendMessageMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        output: 'Tell me the top stories',
+        output: 'Vat het nieuws samen',
         type: 'user_message'
       }),
       []
     );
   });
 
-  it('renders appended article briefings and calls the configured audio action', () => {
+  it('ignores legacy article briefings content', () => {
     const StarterWidgetWithProps = StarterWidget as any;
 
     render(
@@ -132,31 +173,10 @@ describe('StarterWidget', () => {
       </RecoilRoot>
     );
 
+    expect(screen.queryByRole('heading', { name: 'Hoofdpunten' })).toBeNull();
     expect(
-      screen.getByRole('heading', { name: 'Hoofdpunten' })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: 'Chipsector trekt de beurs hoger' })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText('De technologiesector wint terrein.')
-    ).toBeInTheDocument();
-
-    const articleLink = screen.getByRole('link', { name: 'Lees het artikel' });
-    expect(articleLink).toHaveAttribute('href', 'https://www.tijd.be/chips');
-
-    fireEvent.click(screen.getByRole('button', { name: 'Voorlezen' }));
-
-    expect(callActionMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'readaloud_action',
-        payload: {
-          content:
-            'Chipsector trekt de beurs hoger\nDe technologiesector wint terrein.\nBeleggers kijken naar nieuwe cijfers.\nAnalisten blijven voorzichtig.',
-          query: 'Chipsector trekt de beurs hoger'
-        }
-      }),
-      'session-123'
-    );
+      screen.queryByRole('heading', { name: 'Chipsector trekt de beurs hoger' })
+    ).toBeNull();
+    expect(callActionMock).not.toHaveBeenCalled();
   });
 });

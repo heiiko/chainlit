@@ -138,6 +138,9 @@ async def test_project_settings_with_starter_widget(
                 StarterWidgetTab(
                     key="trending",
                     label="Trending",
+                    heading="Current Questions",
+                    byline="Based on today's news",
+                    variant="list",
                     starters=[Starter(label="Top stories", message="Top stories")],
                 )
             ],
@@ -172,6 +175,9 @@ async def test_project_settings_with_starter_widget(
     data = response.json()
     assert data["starterWidget"]["header"]["title"] == "News Assistant"
     assert data["starterWidget"]["tabs"][0]["key"] == "trending"
+    assert data["starterWidget"]["tabs"][0]["heading"] == "Current Questions"
+    assert data["starterWidget"]["tabs"][0]["byline"] == "Based on today's news"
+    assert data["starterWidget"]["tabs"][0]["variant"] == "list"
     assert data["starterWidget"]["tabs"][0]["starters"][0]["label"] == "Top stories"
     assert data["starterWidget"]["initialTab"] == "trending"
     assert data["starterWidget"]["articleBriefings"]["title"] == "Hoofdpunten"

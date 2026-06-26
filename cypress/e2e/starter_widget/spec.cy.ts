@@ -1,15 +1,16 @@
 describe('Starter Widget', () => {
-  it('should render the tabbed starter widget', () => {
+  it('should render the stacked starter widget overview', () => {
     cy.get('#starters').should('exist');
     cy.contains('News Assistant').should('be.visible');
-    cy.contains('button', 'Trending').should('exist');
-    cy.contains('button', 'While you were away').should('exist');
+    cy.contains('Current Questions').should('be.visible');
+    cy.contains("Based on today's news.").should('be.visible');
+    cy.contains('While you were away').should('be.visible');
+    cy.contains('Get a summary of the past 24 hours.').should('be.visible');
     cy.get('#starter-top-stories').should('exist');
-    cy.get('#starter-market-brief').should('not.exist');
+    cy.get('#starter-market-brief').should('exist');
   });
 
-  it('should switch tabs and send a starter message', () => {
-    cy.contains('button', 'While you were away').should('be.visible').click();
+  it('should send a starter message from an overview pill', () => {
     cy.get('#starter-market-brief').should('exist').click();
     cy.get('.step').should('have.length', 2);
     cy.get('.step').eq(0).contains('Give me the latest market brief');

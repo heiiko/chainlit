@@ -103,7 +103,7 @@ describe('WelcomeScreen', () => {
     );
   });
 
-  it('keeps the starter widget visible when it only contains article briefings', () => {
+  it('hides the starter widget when it only contains legacy article briefings', () => {
     (useChatMessages as any).mockReturnValue({
       messages: [{ id: 'message-id', type: 'user_message', output: 'hello' }]
     });
@@ -126,6 +126,6 @@ describe('WelcomeScreen', () => {
 
     render(<WelcomeScreen />);
 
-    expect(screen.getByTestId('starters')).toBeInTheDocument();
+    expect(screen.queryByTestId('starters')).toBeNull();
   });
 });

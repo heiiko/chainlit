@@ -10,8 +10,26 @@ async def starter_widget():
         ),
         tabs=[
             cl.StarterWidgetTab(
+                key="catch-up",
+                label="While you were away",
+                heading="While you were away",
+                byline="Get a summary of the past 24 hours.",
+                variant="pills",
+                starters=[
+                    cl.Starter(
+                        label="Market brief", message="Give me the latest market brief"
+                    ),
+                    cl.Starter(
+                        label="Politics recap", message="Give me the latest politics recap"
+                    ),
+                ],
+            ),
+            cl.StarterWidgetTab(
                 key="trending",
                 label="Trending",
+                heading="Current Questions",
+                byline="Based on today's news.",
+                variant="list",
                 starters=[
                     cl.Starter(label="Top stories", message="Top stories"),
                     cl.Starter(label="Morning briefing", message="Morning briefing"),
@@ -23,20 +41,8 @@ async def starter_widget():
                     cl.Starter(label="Real estate notes", message="Real estate notes"),
                 ],
             ),
-            cl.StarterWidgetTab(
-                key="catch-up",
-                label="While you were away",
-                starters=[
-                    cl.Starter(
-                        label="Market brief", message="Give me the latest market brief"
-                    ),
-                    cl.Starter(
-                        label="Politics recap", message="Give me the latest politics recap"
-                    ),
-                ],
-            ),
         ],
-        initial_tab="trending",
+        initial_tab="catch-up",
     )
 
 
