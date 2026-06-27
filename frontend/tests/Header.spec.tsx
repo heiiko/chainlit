@@ -104,4 +104,28 @@ describe('Header', () => {
     expect(logo).not.toHaveClass('w-10');
     expect(logo.parentElement).toHaveClass('absolute', 'top-1/2', 'left-1/2');
   });
+
+  it('renders the themed SVG accent after the header logo', () => {
+    render(
+      <RecoilRoot>
+        <Header />
+      </RecoilRoot>
+    );
+
+    const logo = screen.getByRole('img', { name: 'logo' });
+    const accent = screen.getByTestId('header-logo-accent');
+
+    expect(accent.tagName.toLowerCase()).toBe('svg');
+    expect(accent.previousElementSibling).toBe(logo);
+    expect(accent).toHaveClass('h-10');
+    expect(accent).toHaveClass('bg-transparent');
+    expect(accent).toHaveAttribute(
+      'fill',
+      'var(--mfn-starter-widget-pill-background, rgb(87,152,252))'
+    );
+    expect(accent).toHaveAttribute(
+      'stroke',
+      'var(--mfn-starter-widget-pill-background, rgb(87,152,252))'
+    );
+  });
 });

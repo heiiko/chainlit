@@ -32,6 +32,9 @@ import SidebarTrigger from './SidebarTrigger';
 import { ThemeToggle } from './ThemeToggle';
 import UserNav from './UserNav';
 
+const headerLogoAccentColor =
+  'var(--mfn-starter-widget-pill-background, rgb(87,152,252))';
+
 const Header = memo(() => {
   const { audioConnection } = useAudio();
   const navigate = useNavigate();
@@ -76,8 +79,37 @@ const Header = memo(() => {
         <ChatProfiles navigate={navigate} />
       </div>
 
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2">
         <img src="public/icon/logo.png" alt="logo" className="h-10" />
+        <svg
+          aria-hidden="true"
+          className="h-10 w-auto shrink-0 bg-transparent"
+          data-testid="header-logo-accent"
+          fill={headerLogoAccentColor}
+          focusable="false"
+          height="116"
+          stroke={headerLogoAccentColor}
+          viewBox="0 0 139 116"
+          width="139"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M44.4 30.6 C45.2 28.4 48.3 28.4 49.1 30.6 L56.7 53.2 C57 54 57.6 54.6 58.4 54.9 L80.3 62.3 C82.5 63 82.5 66.1 80.3 66.8 L58.4 74.2 C57.6 74.5 57 75.1 56.7 75.9 L49.1 98.5 C48.3 100.7 45.2 100.7 44.4 98.5 L36.8 75.9 C36.5 75.1 35.9 74.5 35.1 74.2 L10.9 66.8 C8.7 66.1 8.7 63 10.9 62.3 L35.1 54.9 C35.9 54.6 36.5 54 36.8 53.2 L44.4 30.6 Z"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="4"
+          />
+          <path
+            d="M68 14 V34 M58 24 H78"
+            strokeLinecap="round"
+            strokeWidth="4"
+          />
+          <path
+            d="M87 34 V48 M80 41 H94"
+            strokeLinecap="round"
+            strokeWidth="4"
+          />
+        </svg>
         {audioConnection === 'on' ? (
           <AudioPresence
             type="server"
