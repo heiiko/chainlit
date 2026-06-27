@@ -56,7 +56,7 @@ const Header = memo(() => {
 
   return (
     <div
-      className="p-3 flex h-[60px] items-center justify-between gap-2 relative"
+      className="relative z-20 flex h-[60px] items-center justify-between gap-2 p-3"
       id="header"
     >
       <div className="flex items-center">

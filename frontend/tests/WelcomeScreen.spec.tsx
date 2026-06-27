@@ -99,16 +99,33 @@ describe('WelcomeScreen', () => {
     const { container } = render(<WelcomeScreen />);
 
     const welcomeScreen = container.querySelector('#welcome-screen');
+    const overscrollBackdrop = screen.getByTestId(
+      'welcome-header-overscroll-backdrop'
+    );
     const backdrop = screen.getByTestId('welcome-header-backdrop');
     const content = screen.getByTestId('welcome-content');
 
     expect(welcomeScreen).toHaveClass('relative', 'isolate');
+    expect(overscrollBackdrop).toHaveAttribute('aria-hidden', 'true');
+    expect(overscrollBackdrop).toHaveClass(
+      'pointer-events-none',
+      'fixed',
+      'left-0',
+      'top-0',
+      'z-0',
+      'h-[114px]',
+      'w-screen'
+    );
+    expect(overscrollBackdrop).toHaveStyle({
+      backgroundColor: 'var(--mfn-header-background, hsl(var(--background)))'
+    });
     expect(backdrop).toHaveAttribute('aria-hidden', 'true');
     expect(backdrop).toHaveClass(
       'pointer-events-none',
       'absolute',
       'left-1/2',
       'top-[-100vh]',
+      'z-0',
       'h-[calc(100vh+54px)]',
       'w-screen',
       '-translate-x-1/2'

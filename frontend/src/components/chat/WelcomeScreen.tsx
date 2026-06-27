@@ -24,6 +24,9 @@ interface Props {
   autoScrollRef?: MutableRefObject<boolean>;
 }
 
+const starterBackdropBackground =
+  'var(--mfn-header-background, hsl(var(--background)))';
+
 function hasStarterWidgetContent(widget?: IStarterWidget) {
   return Boolean(widget?.tabs?.some((tab) => tab.starters.length));
 }
@@ -126,15 +129,24 @@ export default function WelcomeScreen({ autoScrollRef }: Props) {
       )}
     >
       {showStarterBackdrop ? (
-        <div
-          aria-hidden="true"
-          data-testid="welcome-header-backdrop"
-          className="pointer-events-none absolute left-1/2 top-[-100vh] h-[calc(100vh+54px)] w-screen -translate-x-1/2"
-          style={{
-            backgroundColor:
-              'var(--mfn-header-background, hsl(var(--background)))'
-          }}
-        />
+        <>
+          <div
+            aria-hidden="true"
+            data-testid="welcome-header-overscroll-backdrop"
+            className="pointer-events-none fixed left-0 top-0 z-0 h-[114px] w-screen"
+            style={{
+              backgroundColor: starterBackdropBackground
+            }}
+          />
+          <div
+            aria-hidden="true"
+            data-testid="welcome-header-backdrop"
+            className="pointer-events-none absolute left-1/2 top-[-100vh] z-0 h-[calc(100vh+54px)] w-screen -translate-x-1/2"
+            style={{
+              backgroundColor: starterBackdropBackground
+            }}
+          />
+        </>
       ) : null}
       <div
         className={cn(

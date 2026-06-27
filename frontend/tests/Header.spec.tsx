@@ -96,7 +96,9 @@ describe('Header', () => {
     );
 
     const logo = screen.getByRole('img', { name: 'logo' });
+    const header = logo.closest('#header');
 
+    expect(header).toHaveClass('relative', 'z-20');
     expect(logo).toHaveAttribute('src', 'public/icon/logo.png');
     expect(logo).toHaveClass('h-10');
     expect(logo).not.toHaveClass('w-10');
