@@ -137,7 +137,7 @@ function PillSection({
   tab: StarterWidgetSectionTab;
 }) {
   return (
-    <section className="flex flex-col gap-5 rounded-[20px] bg-[rgb(73,129,251)] p-4 !text-white shadow-[3px_6px_5px_0px_hsl(var(--border)),0_3px_10px_rgba(15,23,42,0.08)]">
+    <section className="flex flex-col gap-4 rounded-[20px] bg-[rgb(73,129,251)] p-4 !text-white shadow-[0_18px_30px_-22px_rgba(14,42,76,0.85),0_8px_16px_-12px_rgba(14,42,76,0.45)]">
       <SectionHeading inverted tab={tab} />
       <div className="-mx-4 flex gap-[10px] overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {tab.starters.map((starter) => (
