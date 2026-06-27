@@ -76,7 +76,7 @@ function StarterPill({ autoScrollRef, starter }: StarterButtonProps) {
       disabled={disabled}
       onClick={onSubmit}
       className={cn(
-        'inline-flex shrink-0 items-center gap-2 rounded-[999px] border border-[rgb(87,152,252)] bg-[rgb(87,152,252)] px-[15px] py-2.5 font-sans text-[14px] font-medium leading-none text-white transition-colors',
+        'inline-flex shrink-0 items-center gap-2 rounded-[12px] border border-[rgb(87,152,252)] bg-[rgb(87,152,252)] px-[15px] py-2.5 font-sans text-[14px] font-medium leading-none text-white transition-colors',
         'hover:border-[rgb(87,152,252)] hover:bg-[rgb(87,152,252)] hover:text-white',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         'disabled:cursor-not-allowed disabled:opacity-50'

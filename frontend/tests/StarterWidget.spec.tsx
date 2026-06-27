@@ -128,7 +128,7 @@ describe('StarterWidget', () => {
     const newsPill = screen.getByRole('button', { name: 'In het nieuws' });
     expect(newsPill).toHaveClass(
       'gap-2',
-      'rounded-[999px]',
+      'rounded-[12px]',
       'bg-[rgb(87,152,252)]',
       'border-[rgb(87,152,252)]',
       'px-[15px]',
@@ -207,7 +207,7 @@ describe('StarterWidget', () => {
       'p-4',
       'rounded-[20px]',
       '!text-white',
-      'shadow-[3px_6px_5px_0px_hsl(var(--border)),0_3px_10px_rgba(15,23,42,0.08)]'
+      'shadow-[0_18px_30px_-22px_rgba(14,42,76,0.85),0_8px_16px_-12px_rgba(14,42,76,0.45)]'
     );
     expect(heading).toHaveClass('!text-white');
     expect(
