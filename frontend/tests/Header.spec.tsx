@@ -117,8 +117,9 @@ describe('Header', () => {
 
     expect(accent.tagName.toLowerCase()).toBe('svg');
     expect(accent.previousElementSibling).toBe(logo);
-    expect(accent).toHaveClass('h-10');
+    expect(accent).toHaveClass('h-8');
     expect(accent).toHaveClass('bg-transparent');
+    expect(accent).toHaveStyle({ alignSelf: 'flex-start' });
     expect(accent).toHaveAttribute(
       'fill',
       'var(--mfn-starter-widget-pill-background, rgb(87,152,252))'
