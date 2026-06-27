@@ -109,14 +109,14 @@ describe('WelcomeScreen', () => {
       'absolute',
       'left-1/2',
       'top-[-100vh]',
-      'h-[calc(100vh+84px)]',
+      'h-[calc(100vh+54px)]',
       'w-screen',
       '-translate-x-1/2'
     );
     expect(backdrop).toHaveStyle({
       backgroundColor: 'var(--mfn-header-background, hsl(var(--background)))'
     });
-    expect(content).toHaveClass('relative', 'z-10', 'pt-[34px]');
+    expect(content).toHaveClass('relative', 'z-10', 'pt-[4px]');
   });
 
   it('passes the shared autoscroll ref to starter buttons when the starter widget remains visible', () => {

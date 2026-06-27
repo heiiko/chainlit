@@ -129,7 +129,7 @@ export default function WelcomeScreen({ autoScrollRef }: Props) {
         <div
           aria-hidden="true"
           data-testid="welcome-header-backdrop"
-          className="pointer-events-none absolute left-1/2 top-[-100vh] h-[calc(100vh+84px)] w-screen -translate-x-1/2"
+          className="pointer-events-none absolute left-1/2 top-[-100vh] h-[calc(100vh+54px)] w-screen -translate-x-1/2"
           style={{
             backgroundColor:
               'var(--mfn-header-background, hsl(var(--background)))'
@@ -139,7 +139,7 @@ export default function WelcomeScreen({ autoScrollRef }: Props) {
       <div
         className={cn(
           'relative z-10 flex flex-col gap-4 w-full items-center',
-          showStarterBackdrop && 'pt-[34px]'
+          showStarterBackdrop && 'pt-[4px]'
         )}
         data-testid="welcome-content"
       >
