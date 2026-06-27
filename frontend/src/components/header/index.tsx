@@ -77,7 +77,7 @@ const Header = memo(() => {
       </div>
 
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <img src="public/icon/logo.png" alt="logo" className="w-10 h-10" />
+        <img src="public/icon/logo.png" alt="logo" className="h-10" />
         {audioConnection === 'on' ? (
           <AudioPresence
             type="server"

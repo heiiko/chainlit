@@ -98,7 +98,8 @@ describe('Header', () => {
     const logo = screen.getByRole('img', { name: 'logo' });
 
     expect(logo).toHaveAttribute('src', 'public/icon/logo.png');
-    expect(logo).toHaveClass('w-10', 'h-10');
+    expect(logo).toHaveClass('h-10');
+    expect(logo).not.toHaveClass('w-10');
     expect(logo.parentElement).toHaveClass('absolute', 'top-1/2', 'left-1/2');
   });
 });
