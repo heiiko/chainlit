@@ -203,7 +203,7 @@ describe('StarterWidget', () => {
       'p-4',
       'rounded-[20px]',
       '!text-white',
-      'shadow-[0_18px_30px_-22px_rgba(14,42,76,0.85),0_8px_16px_-12px_rgba(14,42,76,0.45)]'
+      'shadow-[0_18px_30px_-22px_var(--mfn-starter-widget-shadow-strong,rgba(14,42,76,0.85)),0_8px_16px_-12px_var(--mfn-starter-widget-shadow-soft,rgba(14,42,76,0.45))]'
     );
     expect(heading).toHaveClass('!text-white');
     expect(
