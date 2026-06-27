@@ -129,8 +129,8 @@ describe('StarterWidget', () => {
     expect(newsPill).toHaveClass(
       'gap-2',
       'rounded-[999px]',
-      'bg-[rgb(87,152,252)]',
-      'border-[rgb(87,152,252)]',
+      'bg-[color:var(--mfn-starter-widget-pill-background,rgb(87,152,252))]',
+      'border-[color:var(--mfn-starter-widget-pill-background,rgb(87,152,252))]',
       'px-[15px]',
       'py-2.5',
       'text-white'
@@ -199,7 +199,7 @@ describe('StarterWidget', () => {
     const missedNewsSection = heading.closest('section');
 
     expect(missedNewsSection).toHaveClass(
-      'bg-[rgb(73,129,251)]',
+      'bg-[color:var(--mfn-starter-widget-box-background,rgb(73,129,251))]',
       'p-4',
       'rounded-[20px]',
       '!text-white',
@@ -210,8 +210,8 @@ describe('StarterWidget', () => {
       screen.getByText('Krijg een samenvatting van de voorbije 24 uur')
     ).toHaveClass('!text-white');
     expect(screen.getByRole('button', { name: 'In het nieuws' })).toHaveClass(
-      'bg-[rgb(87,152,252)]',
-      'border-[rgb(87,152,252)]',
+      'bg-[color:var(--mfn-starter-widget-pill-background,rgb(87,152,252))]',
+      'border-[color:var(--mfn-starter-widget-pill-background,rgb(87,152,252))]',
       'text-white'
     );
     expect(

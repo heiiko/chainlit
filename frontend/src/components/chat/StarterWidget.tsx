@@ -75,8 +75,8 @@ function StarterPill({ autoScrollRef, starter }: StarterButtonProps) {
       disabled={disabled}
       onClick={onSubmit}
       className={cn(
-        'inline-flex shrink-0 items-center gap-2 rounded-[999px] border border-[rgb(87,152,252)] bg-[rgb(87,152,252)] px-[15px] py-2.5 font-sans text-[14px] font-medium leading-none text-white transition-colors',
-        'hover:border-[rgb(87,152,252)] hover:bg-[rgb(87,152,252)] hover:text-white',
+        'inline-flex shrink-0 items-center gap-2 rounded-[999px] border border-[color:var(--mfn-starter-widget-pill-background,rgb(87,152,252))] bg-[color:var(--mfn-starter-widget-pill-background,rgb(87,152,252))] px-[15px] py-2.5 font-sans text-[14px] font-medium leading-none text-white transition-colors',
+        'hover:border-[color:var(--mfn-starter-widget-pill-background,rgb(87,152,252))] hover:bg-[color:var(--mfn-starter-widget-pill-background,rgb(87,152,252))] hover:text-white',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         'disabled:cursor-not-allowed disabled:opacity-50'
       )}
@@ -135,7 +135,7 @@ function PillSection({
   tab: StarterWidgetSectionTab;
 }) {
   return (
-    <section className="flex flex-col gap-4 rounded-[20px] bg-[rgb(73,129,251)] p-4 !text-white shadow-[0_18px_30px_-22px_rgba(14,42,76,0.85),0_8px_16px_-12px_rgba(14,42,76,0.45)]">
+    <section className="flex flex-col gap-4 rounded-[20px] bg-[color:var(--mfn-starter-widget-box-background,rgb(73,129,251))] p-4 !text-white shadow-[0_18px_30px_-22px_rgba(14,42,76,0.85),0_8px_16px_-12px_rgba(14,42,76,0.45)]">
       <SectionHeading inverted tab={tab} />
       <div className="-mx-4 flex gap-[10px] overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {tab.starters.map((starter) => (
