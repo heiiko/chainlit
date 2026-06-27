@@ -128,18 +128,14 @@ describe('StarterWidget', () => {
     const newsPill = screen.getByRole('button', { name: 'In het nieuws' });
     expect(newsPill).toHaveClass(
       'gap-2',
-      'rounded-[12px]',
+      'rounded-[999px]',
       'bg-[rgb(87,152,252)]',
       'border-[rgb(87,152,252)]',
       'px-[15px]',
       'py-2.5',
       'text-white'
     );
-    expect(newsPill.querySelector('svg')).toHaveClass(
-      'h-[17px]',
-      'w-[17px]',
-      'text-white'
-    );
+    expect(newsPill.querySelector('svg')).not.toBeInTheDocument();
     expect(screen.getByText('In het nieuws')).toHaveClass(
       'text-[13px]',
       'font-bold',
@@ -220,7 +216,7 @@ describe('StarterWidget', () => {
     );
     expect(
       screen.getByRole('button', { name: 'In het nieuws' }).querySelector('svg')
-    ).toHaveClass('text-white');
+    ).not.toBeInTheDocument();
   });
 
   it('ignores legacy article briefings content', () => {
