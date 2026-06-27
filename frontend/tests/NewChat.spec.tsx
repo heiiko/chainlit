@@ -25,6 +25,9 @@ describe('NewChatButton', () => {
     render(<NewChatButton />);
     const button = screen.getByRole('button');
     expect(button).toBeInTheDocument();
+    expect(button).toHaveClass('text-primary-foreground');
+    expect(button).toHaveClass('hover:text-muted-foreground');
+    expect(button).not.toHaveClass('text-muted-foreground');
     expect(button.querySelector('svg')).toBeInTheDocument();
   });
 
