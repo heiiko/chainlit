@@ -1,5 +1,4 @@
 import { cn } from '@/lib/utils';
-import { MessageCircle } from 'lucide-react';
 import { MutableRefObject } from 'react';
 
 import {
@@ -82,7 +81,6 @@ function StarterPill({ autoScrollRef, starter }: StarterButtonProps) {
         'disabled:cursor-not-allowed disabled:opacity-50'
       )}
     >
-      <MessageCircle className="h-[17px] w-[17px] shrink-0 text-white" />
       <span className="whitespace-nowrap text-[13px] font-bold uppercase">
         {cleanPillLabel(starter.label)}
       </span>
