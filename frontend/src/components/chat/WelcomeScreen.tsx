@@ -96,6 +96,7 @@ export default function WelcomeScreen({ autoScrollRef }: Props) {
   }, [chatProfiles, chatProfile]);
 
   const threadHasMessages = hasMessage(messages);
+  const showStarterBackdrop = !threadHasMessages && hasStarterWidget;
 
   if (threadHasMessages && !hasStarterWidget) return null;
 
@@ -120,11 +121,28 @@ export default function WelcomeScreen({ autoScrollRef }: Props) {
     <div
       id="welcome-screen"
       className={cn(
-        'flex flex-col gap-4 w-full flex-grow welcome-screen mx-auto transition-opacity duration-500 opacity-0 delay-100',
+        'relative isolate flex flex-col gap-4 w-full flex-grow welcome-screen mx-auto transition-opacity duration-500 opacity-0 delay-100',
         isVisible && 'opacity-100'
       )}
     >
-      <div className="flex flex-col gap-4 w-full items-center">
+      {showStarterBackdrop ? (
+        <div
+          aria-hidden="true"
+          data-testid="welcome-header-backdrop"
+          className="pointer-events-none absolute left-1/2 top-[-100vh] h-[calc(100vh+84px)] w-screen -translate-x-1/2"
+          style={{
+            backgroundColor:
+              'var(--mfn-header-background, hsl(var(--background)))'
+          }}
+        />
+      ) : null}
+      <div
+        className={cn(
+          'relative z-10 flex flex-col gap-4 w-full items-center',
+          showStarterBackdrop && 'pt-[34px]'
+        )}
+        data-testid="welcome-content"
+      >
         {logo}
         {hasStarterWidget ? <Starters autoScrollRef={autoScrollRef} /> : null}
         {hasStarterWidget ? null : <Starters autoScrollRef={autoScrollRef} />}

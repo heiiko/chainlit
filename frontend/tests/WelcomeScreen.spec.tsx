@@ -73,6 +73,52 @@ describe('WelcomeScreen', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('places the native starter widget over an overscroll-safe full-width header backdrop', () => {
+    (useChatMessages as any).mockReturnValue({ messages: [] });
+    (useChatSession as any).mockReturnValue({ chatProfile: undefined });
+    (useConfig as any).mockReturnValue({
+      config: {
+        chatProfiles: [],
+        starterWidget: {
+          tabs: [
+            {
+              key: 'missed-news',
+              label: 'Wat heb ik gemist?',
+              starters: [
+                {
+                  label: 'In het nieuws',
+                  message: 'Vat het nieuws samen'
+                }
+              ]
+            }
+          ]
+        }
+      }
+    });
+
+    const { container } = render(<WelcomeScreen />);
+
+    const welcomeScreen = container.querySelector('#welcome-screen');
+    const backdrop = screen.getByTestId('welcome-header-backdrop');
+    const content = screen.getByTestId('welcome-content');
+
+    expect(welcomeScreen).toHaveClass('relative', 'isolate');
+    expect(backdrop).toHaveAttribute('aria-hidden', 'true');
+    expect(backdrop).toHaveClass(
+      'pointer-events-none',
+      'absolute',
+      'left-1/2',
+      'top-[-100vh]',
+      'h-[calc(100vh+84px)]',
+      'w-screen',
+      '-translate-x-1/2'
+    );
+    expect(backdrop).toHaveStyle({
+      backgroundColor: 'var(--mfn-header-background, hsl(var(--background)))'
+    });
+    expect(content).toHaveClass('relative', 'z-10', 'pt-[34px]');
+  });
+
   it('passes the shared autoscroll ref to starter buttons when the starter widget remains visible', () => {
     const autoScrollRef = { current: false };
     (useChatMessages as any).mockReturnValue({
