@@ -100,21 +100,63 @@ describe('StarterWidget', () => {
       screen.getByRole('heading', { name: 'Wat heb ik gemist?' })
     ).toBeInTheDocument();
     expect(
+      screen.getByRole('heading', { name: 'Wat heb ik gemist?' })
+    ).toHaveClass('text-[16px]');
+    expect(
       screen.getByText('Krijg een samenvatting van de voorbije 24 uur')
     ).toBeInTheDocument();
     expect(
+      screen.getByText('Krijg een samenvatting van de voorbije 24 uur')
+    ).toHaveClass('text-[14px]');
+    expect(
       screen.getByRole('heading', { name: 'Actuele vragen' })
     ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Actuele vragen' })).toHaveClass(
+      'text-[16px]'
+    );
     expect(
       screen.getByText('Op basis van het nieuws van vandaag')
     ).toBeInTheDocument();
+    expect(screen.getByText('Op basis van het nieuws van vandaag')).toHaveClass(
+      'text-[14px]'
+    );
     expect(screen.queryByRole('tablist')).not.toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: 'In het nieuws' })
-    ).toBeInTheDocument();
+    const pillRail = screen.getByRole('button', {
+      name: 'In het nieuws'
+    }).parentElement;
+    expect(pillRail).toHaveClass('gap-[10px]');
+    const newsPill = screen.getByRole('button', { name: 'In het nieuws' });
+    expect(newsPill).toHaveClass(
+      'gap-2',
+      'rounded-[999px]',
+      'bg-[rgb(87,152,252)]',
+      'border-[rgb(87,152,252)]',
+      'px-[15px]',
+      'py-2.5',
+      'text-white'
+    );
+    expect(newsPill.querySelector('svg')).toHaveClass(
+      'h-[17px]',
+      'w-[17px]',
+      'text-white'
+    );
+    expect(screen.getByText('In het nieuws')).toHaveClass(
+      'text-[13px]',
+      'font-bold',
+      'uppercase'
+    );
     expect(
       screen.getByRole('button', { name: 'Waarom groeit de chipsector?' })
     ).toBeInTheDocument();
+    expect(screen.getByAltText('')).toHaveClass(
+      'h-[54px]',
+      'w-[54px]',
+      'rounded-[9px]'
+    );
+    expect(screen.getByText('Waarom groeit de chipsector?')).toHaveClass(
+      'text-[16px]',
+      'leading-[1.38]'
+    );
 
     fireEvent.click(screen.getByRole('button', { name: 'In het nieuws' }));
 
@@ -126,6 +168,59 @@ describe('StarterWidget', () => {
       }),
       []
     );
+  });
+
+  it('styles the missed-news pill section as a blue card', () => {
+    const StarterWidgetWithProps = StarterWidget as any;
+
+    render(
+      <RecoilRoot>
+        <StarterWidgetWithProps
+          widget={{
+            tabs: [
+              {
+                key: 'while-you-were-away',
+                label: 'Wat heb ik gemist?',
+                heading: 'Wat heb ik gemist?',
+                byline: 'Krijg een samenvatting van de voorbije 24 uur',
+                variant: 'pills',
+                starters: [
+                  {
+                    label: 'In het nieuws (voorbije 24 uur)',
+                    message: 'Vat het nieuws samen'
+                  }
+                ]
+              }
+            ]
+          }}
+        />
+      </RecoilRoot>
+    );
+
+    const heading = screen.getByRole('heading', {
+      name: 'Wat heb ik gemist?'
+    });
+    const missedNewsSection = heading.closest('section');
+
+    expect(missedNewsSection).toHaveClass(
+      'bg-[rgb(73,129,251)]',
+      'p-4',
+      'rounded-[20px]',
+      '!text-white',
+      'shadow-[3px_6px_5px_0px_hsl(var(--border)),0_3px_10px_rgba(15,23,42,0.08)]'
+    );
+    expect(heading).toHaveClass('!text-white');
+    expect(
+      screen.getByText('Krijg een samenvatting van de voorbije 24 uur')
+    ).toHaveClass('!text-white');
+    expect(screen.getByRole('button', { name: 'In het nieuws' })).toHaveClass(
+      'bg-[rgb(87,152,252)]',
+      'border-[rgb(87,152,252)]',
+      'text-white'
+    );
+    expect(
+      screen.getByRole('button', { name: 'In het nieuws' }).querySelector('svg')
+    ).toHaveClass('text-white');
   });
 
   it('ignores legacy article briefings content', () => {

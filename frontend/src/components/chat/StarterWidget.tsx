@@ -29,20 +29,36 @@ function cleanPillLabel(label: string) {
   return label.replace(/\s*\([^)]*\)\s*$/, '').trim();
 }
 
-function SectionHeading({ tab }: { tab: StarterWidgetSectionTab }) {
+function SectionHeading({
+  inverted = false,
+  tab
+}: {
+  inverted?: boolean;
+  tab: StarterWidgetSectionTab;
+}) {
   const title = tab.heading || tab.label;
 
   if (!title && !tab.byline) return null;
 
   return (
-    <header className="flex flex-col gap-2">
+    <header className="flex flex-col gap-1">
       {title ? (
-        <h2 className="m-0 font-sans text-[1.35rem] font-bold uppercase leading-tight tracking-normal text-foreground md:text-[1.55rem]">
+        <h2
+          className={cn(
+            'm-0 font-sans text-[16px] font-bold uppercase leading-[1.25] tracking-normal text-foreground',
+            inverted && '!text-white'
+          )}
+        >
           {title}
         </h2>
       ) : null}
       {tab.byline ? (
-        <p className="m-0 font-sans text-[1.1rem] font-semibold leading-snug text-muted-foreground md:text-[1.35rem]">
+        <p
+          className={cn(
+            'm-0 pb-2 font-sans text-[14px] font-medium leading-[1.35] text-muted-foreground',
+            inverted && '!text-white'
+          )}
+        >
           {tab.byline}
         </p>
       ) : null}
@@ -60,14 +76,14 @@ function StarterPill({ autoScrollRef, starter }: StarterButtonProps) {
       disabled={disabled}
       onClick={onSubmit}
       className={cn(
-        'inline-flex h-[3.8rem] shrink-0 items-center gap-4 rounded-full border border-border bg-background px-7 font-sans text-lg font-bold text-foreground transition-colors',
-        'hover:bg-accent hover:text-accent-foreground',
+        'inline-flex shrink-0 items-center gap-2 rounded-[999px] border border-[rgb(87,152,252)] bg-[rgb(87,152,252)] px-[15px] py-2.5 font-sans text-[14px] font-medium leading-none text-white transition-colors',
+        'hover:border-[rgb(87,152,252)] hover:bg-[rgb(87,152,252)] hover:text-white',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         'disabled:cursor-not-allowed disabled:opacity-50'
       )}
     >
-      <MessageCircle className="h-5 w-5 shrink-0 text-[#007d80]" />
-      <span className="whitespace-nowrap">
+      <MessageCircle className="h-[17px] w-[17px] shrink-0 text-white" />
+      <span className="whitespace-nowrap text-[13px] font-bold uppercase">
         {cleanPillLabel(starter.label)}
       </span>
     </button>
@@ -88,14 +104,14 @@ function QuestionStarter({ autoScrollRef, starter }: StarterButtonProps) {
       disabled={disabled}
       onClick={onSubmit}
       className={cn(
-        'grid w-full grid-cols-[4.25rem_minmax(0,1fr)] items-center gap-6 border-b py-5 text-left transition-colors last:border-b-0',
+        'grid w-full grid-cols-[54px_minmax(0,1fr)] items-center gap-5 border-b py-3 text-left transition-colors first:border-t last:border-b-0',
         'hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-        'disabled:cursor-not-allowed disabled:opacity-50 md:grid-cols-[5.4rem_minmax(0,1fr)] md:gap-8 md:py-6'
+        'disabled:cursor-not-allowed disabled:opacity-50'
       )}
     >
       {iconSrc ? (
         <img
-          className="aspect-square w-full rounded-xl bg-muted object-cover"
+          className="h-[54px] w-[54px] rounded-[9px] bg-muted object-cover"
           src={iconSrc}
           alt=""
           loading="lazy"
@@ -103,10 +119,10 @@ function QuestionStarter({ autoScrollRef, starter }: StarterButtonProps) {
       ) : (
         <span
           aria-hidden="true"
-          className="aspect-square w-full rounded-xl bg-[repeating-linear-gradient(135deg,#eef1f4_0,#eef1f4_0.85rem,#e8ecef_0.85rem,#e8ecef_1.7rem)]"
+          className="h-[54px] w-[54px] rounded-[9px] bg-[repeating-linear-gradient(135deg,#eef1f4_0,#eef1f4_0.85rem,#e8ecef_0.85rem,#e8ecef_1.7rem)]"
         />
       )}
-      <span className="font-serif text-[1.45rem] font-bold leading-tight text-foreground md:text-[1.8rem]">
+      <span className="font-serif text-[16px] leading-[1.38] text-foreground">
         {starter.label}
       </span>
     </button>
@@ -121,9 +137,9 @@ function PillSection({
   tab: StarterWidgetSectionTab;
 }) {
   return (
-    <section className="flex flex-col gap-8">
-      <SectionHeading tab={tab} />
-      <div className="-mx-4 flex gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <section className="flex flex-col gap-5 rounded-[20px] bg-[rgb(73,129,251)] p-4 !text-white shadow-[3px_6px_5px_0px_hsl(var(--border)),0_3px_10px_rgba(15,23,42,0.08)]">
+      <SectionHeading inverted tab={tab} />
+      <div className="-mx-4 flex gap-[10px] overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {tab.starters.map((starter) => (
           <StarterPill
             autoScrollRef={autoScrollRef}
@@ -144,7 +160,7 @@ function QuestionSection({
   tab: StarterWidgetSectionTab;
 }) {
   return (
-    <section className="flex flex-col gap-6">
+    <section className="flex flex-col gap-2">
       <SectionHeading tab={tab} />
       <div>
         {tab.starters.map((starter) => (
@@ -172,7 +188,7 @@ export default function StarterWidget({ autoScrollRef, widget }: Props) {
   if (!tabs.length) return null;
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-9 overflow-hidden px-4 py-2">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-7 overflow-hidden px-4 py-2">
       {tabs.map((tab, index) => {
         const section =
           tab.variant === 'pills' ? (
@@ -182,7 +198,7 @@ export default function StarterWidget({ autoScrollRef, widget }: Props) {
           );
 
         return (
-          <div key={tab.key} className={cn(index > 0 && 'border-t pt-9')}>
+          <div key={tab.key} className={cn(index > 0 && 'pt-2')}>
             {section}
           </div>
         );
