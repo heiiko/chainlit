@@ -136,7 +136,7 @@ describe('WelcomeScreen', () => {
     expect(content).toHaveClass('relative', 'z-10', 'pt-[4px]');
   });
 
-  it('passes the shared autoscroll ref to starter buttons when the starter widget remains visible', () => {
+  it('keeps the starter backdrop at the top of a conversation when the starter widget remains visible', () => {
     const autoScrollRef = { current: false };
     (useChatMessages as any).mockReturnValue({
       messages: [{ id: 'message-id', type: 'user_message', output: 'hello' }]
@@ -158,8 +158,23 @@ describe('WelcomeScreen', () => {
     });
 
     const WelcomeScreenWithProps = WelcomeScreen as any;
-    render(<WelcomeScreenWithProps autoScrollRef={autoScrollRef} />);
+    const { container } = render(
+      <WelcomeScreenWithProps autoScrollRef={autoScrollRef} />
+    );
 
+    expect(container.querySelector('#welcome-screen')).toHaveClass(
+      'relative',
+      'isolate'
+    );
+    expect(
+      screen.queryByTestId('welcome-header-overscroll-backdrop')
+    ).not.toBeInTheDocument();
+    expect(screen.getByTestId('welcome-header-backdrop')).toBeInTheDocument();
+    expect(screen.getByTestId('welcome-content')).toHaveClass(
+      'relative',
+      'z-10',
+      'pt-[4px]'
+    );
     expect(screen.getByTestId('starters')).toHaveAttribute(
       'data-autoscroll-ref',
       'true'

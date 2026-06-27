@@ -27,6 +27,35 @@ interface Props {
 const starterBackdropBackground =
   'var(--mfn-header-background, hsl(var(--background)))';
 
+function StarterBackdrop({
+  includeOverscrollGuard = true
+}: {
+  includeOverscrollGuard?: boolean;
+}) {
+  return (
+    <>
+      {includeOverscrollGuard ? (
+        <div
+          aria-hidden="true"
+          data-testid="welcome-header-overscroll-backdrop"
+          className="pointer-events-none fixed left-0 top-0 z-0 h-[114px] w-screen"
+          style={{
+            backgroundColor: starterBackdropBackground
+          }}
+        />
+      ) : null}
+      <div
+        aria-hidden="true"
+        data-testid="welcome-header-backdrop"
+        className="pointer-events-none absolute left-1/2 top-[-100vh] z-0 h-[calc(100vh+54px)] w-screen -translate-x-1/2"
+        style={{
+          backgroundColor: starterBackdropBackground
+        }}
+      />
+    </>
+  );
+}
+
 function hasStarterWidgetContent(widget?: IStarterWidget) {
   return Boolean(widget?.tabs?.some((tab) => tab.starters.length));
 }
@@ -99,7 +128,7 @@ export default function WelcomeScreen({ autoScrollRef }: Props) {
   }, [chatProfiles, chatProfile]);
 
   const threadHasMessages = hasMessage(messages);
-  const showStarterBackdrop = !threadHasMessages && hasStarterWidget;
+  const showStarterBackdrop = hasStarterWidget;
 
   if (threadHasMessages && !hasStarterWidget) return null;
 
@@ -108,11 +137,20 @@ export default function WelcomeScreen({ autoScrollRef }: Props) {
       <div
         id="welcome-screen"
         className={cn(
-          'flex w-full justify-center pb-8 welcome-screen transition-opacity duration-500 opacity-0 delay-100',
+          'relative isolate flex w-full justify-center pb-8 welcome-screen transition-opacity duration-500 opacity-0 delay-100',
           isVisible && 'opacity-100'
         )}
       >
-        <div className="flex flex-col gap-4 w-full items-center">
+        {showStarterBackdrop ? (
+          <StarterBackdrop includeOverscrollGuard={false} />
+        ) : null}
+        <div
+          className={cn(
+            'relative z-10 flex flex-col gap-4 w-full items-center',
+            showStarterBackdrop && 'pt-[4px]'
+          )}
+          data-testid="welcome-content"
+        >
           {logo}
           <Starters autoScrollRef={autoScrollRef} />
         </div>
@@ -128,26 +166,7 @@ export default function WelcomeScreen({ autoScrollRef }: Props) {
         isVisible && 'opacity-100'
       )}
     >
-      {showStarterBackdrop ? (
-        <>
-          <div
-            aria-hidden="true"
-            data-testid="welcome-header-overscroll-backdrop"
-            className="pointer-events-none fixed left-0 top-0 z-0 h-[114px] w-screen"
-            style={{
-              backgroundColor: starterBackdropBackground
-            }}
-          />
-          <div
-            aria-hidden="true"
-            data-testid="welcome-header-backdrop"
-            className="pointer-events-none absolute left-1/2 top-[-100vh] z-0 h-[calc(100vh+54px)] w-screen -translate-x-1/2"
-            style={{
-              backgroundColor: starterBackdropBackground
-            }}
-          />
-        </>
-      ) : null}
+      {showStarterBackdrop ? <StarterBackdrop /> : null}
       <div
         className={cn(
           'relative z-10 flex flex-col gap-4 w-full items-center',
