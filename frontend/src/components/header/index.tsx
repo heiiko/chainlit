@@ -33,7 +33,7 @@ import { ThemeToggle } from './ThemeToggle';
 import UserNav from './UserNav';
 
 const headerLogoAccentColor =
-  'var(--mfn-starter-widget-pill-background, rgb(87,152,252))';
+  'var(--mfn-header-logo-accent-color, var(--mfn-starter-widget-pill-background, rgb(87,152,252)))';
 
 const Header = memo(() => {
   const { audioConnection } = useAudio();

@@ -122,11 +122,11 @@ describe('Header', () => {
     expect(accent).toHaveStyle({ alignSelf: 'flex-start' });
     expect(accent).toHaveAttribute(
       'fill',
-      'var(--mfn-starter-widget-pill-background, rgb(87,152,252))'
+      'var(--mfn-header-logo-accent-color, var(--mfn-starter-widget-pill-background, rgb(87,152,252)))'
     );
     expect(accent).toHaveAttribute(
       'stroke',
-      'var(--mfn-starter-widget-pill-background, rgb(87,152,252))'
+      'var(--mfn-header-logo-accent-color, var(--mfn-starter-widget-pill-background, rgb(87,152,252)))'
     );
   });
 });
