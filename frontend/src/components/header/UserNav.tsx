@@ -1,9 +1,7 @@
-import capitalize from 'lodash/capitalize';
-import { LogOut } from 'lucide-react';
+import { CircleUserRound, LogOut } from 'lucide-react';
 
 import { useAuth } from '@chainlit/react-client';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -26,15 +24,12 @@ export default function UserNav() {
       <DropdownMenuTrigger asChild>
         <Button
           id="user-nav-button"
+          aria-label="User menu"
           variant="ghost"
-          className="relative h-8 w-8 rounded-full"
+          size="icon"
+          className="text-primary-foreground hover:text-muted-foreground"
         >
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={user?.metadata.image} alt="user image" />
-            <AvatarFallback className="bg-[color:var(--mfn-user-nav-avatar-background,rgb(26,38,63))] text-primary-foreground font-semibold">
-              {capitalize(displayName[0])}
-            </AvatarFallback>
-          </Avatar>
+          <CircleUserRound className="!size-6" strokeWidth={2} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-26" align="end" forceMount>

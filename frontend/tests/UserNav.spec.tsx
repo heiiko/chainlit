@@ -29,18 +29,22 @@ describe('UserNav', () => {
     });
   });
 
-  it('uses the user-nav avatar theme color for the avatar fallback', () => {
+  it('renders the user menu trigger as a matching lucide icon button', () => {
     render(<UserNav />);
 
-    const userNavButton = screen.getByRole('button');
-    const fallback = screen.getByText('A');
+    const userNavButton = screen.getByRole('button', { name: 'User menu' });
+    const userIcon = userNavButton.querySelector('svg');
 
     expect(userNavButton).toHaveAttribute('id', 'user-nav-button');
-    expect(fallback).toHaveClass(
-      'bg-[color:var(--mfn-user-nav-avatar-background,rgb(26,38,63))]',
+    expect(userNavButton).toHaveClass(
+      'h-9',
+      'w-9',
       'text-primary-foreground',
-      'font-semibold'
+      'hover:text-muted-foreground'
     );
-    expect(fallback).not.toHaveClass('bg-primary');
+    expect(userNavButton).not.toHaveClass('text-muted-foreground');
+    expect(userIcon).toHaveClass('lucide-circle-user-round', '!size-6');
+    expect(userIcon).toHaveAttribute('stroke-width', '2');
+    expect(screen.queryByText('A')).not.toBeInTheDocument();
   });
 });
