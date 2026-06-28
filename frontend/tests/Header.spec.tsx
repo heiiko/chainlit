@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -70,6 +70,7 @@ vi.mock('@/components/header/UserNav', () => ({
 
 describe('Header', () => {
   beforeEach(() => {
+    window.history.pushState({}, '', '/fr/');
     mocks.useAudio.mockReturnValue({ audioConnection: 'off' });
     mocks.useAuth.mockReturnValue({ data: { requireLogin: false } });
     mocks.useChatData.mockReturnValue({ chatSettingsInputs: [] });
@@ -135,6 +136,105 @@ describe('Header', () => {
     expect(accent).toHaveAttribute(
       'stroke',
       'var(--mfn-header-logo-accent-color, var(--mfn-starter-widget-pill-background, rgb(87,152,252)))'
+    );
+  });
+
+  it('toggles a flow-positioned info banner from a button before the user avatar', () => {
+    render(
+      <RecoilRoot>
+        <Header />
+      </RecoilRoot>
+    );
+
+    const infoButton = screen.getByRole('button', {
+      name: 'Show assistant information'
+    });
+    const themeButton = screen.getByRole('button', { name: 'Theme' });
+    const userButton = screen.getByRole('button', { name: 'User' });
+    const infoIcon = infoButton.querySelector('svg');
+
+    expect(
+      themeButton.compareDocumentPosition(infoButton) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    expect(infoButton.nextElementSibling).toBe(userButton);
+    expect(infoButton).toHaveClass(
+      'h-9',
+      'w-9',
+      'text-primary-foreground',
+      'hover:text-muted-foreground'
+    );
+    expect(infoButton).not.toHaveClass('text-muted-foreground');
+    expect(infoIcon).toHaveClass('lucide-info', '!size-6');
+    expect(infoIcon).toHaveAttribute('stroke-width', '2');
+    expect(
+      screen.queryByRole('region', { name: 'Assistant information' })
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(infoButton);
+
+    const banner = screen.getByRole('region', {
+      name: 'Assistant information'
+    });
+    const header = screen.getByRole('img', { name: 'logo' }).closest('#header');
+
+    expect(header).toHaveClass('h-[60px]');
+    expect(banner.previousElementSibling).toBe(header);
+
+    expect(banner).toHaveClass(
+      'relative',
+      'z-20',
+      'w-full',
+      'bg-[color:var(--mfn-user-nav-avatar-background)]',
+      'text-white',
+      'font-sans',
+      'text-sm'
+    );
+    expect(banner).not.toHaveClass('absolute', 'top-full');
+    expect(banner).toHaveTextContent(
+      "Toutes réponses sur cette page sont générées par un assistant d’intelligence artificielle. Ces réponses sont exclusivement fondées sur les articles publiés par les journalistes de L'Echo. Des erreurs sont cependant possibles. En cas de doute, nous vous invitons à consulter les articles cités en source. Consultez la charte IA de L'Echo pour plus d’informations."
+    );
+    expect(banner).not.toHaveTextContent('Lorem ipsum');
+    expect(
+      screen.getByRole('link', { name: "charte IA de L'Echo" })
+    ).toHaveAttribute(
+      'href',
+      'https://www.lecho.be/dossiers/intelligence-artificielle/intelligence-artificielle-et-journalisme-la-charte-de-l-echo-et-du-tijd/10508789.html'
+    );
+    expect(infoButton).toHaveAttribute('aria-expanded', 'true');
+    expect(infoButton).toHaveAttribute(
+      'aria-label',
+      'Hide assistant information'
+    );
+  });
+
+  it('shows the De Tijd disclosure copy and link on Dutch routes', () => {
+    window.history.pushState({}, '', '/nl/');
+
+    render(
+      <RecoilRoot>
+        <Header />
+      </RecoilRoot>
+    );
+
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'Show assistant information'
+      })
+    );
+
+    const banner = screen.getByRole('region', {
+      name: 'Assistant information'
+    });
+
+    expect(banner).toHaveTextContent(
+      'Deze AI-toepassing geeft antwoorden op basis van het archief van De Tijd. Weet dat AI in sommige gevallen fouten kan maken. Controleer daarom bij twijfel altijd de bronartikels waarnaar wordt verwezen. Raadpleeg het AI-charter van De Tijd voor meer informatie.'
+    );
+    expect(
+      screen.getByRole('link', { name: 'AI-charter van De Tijd' })
+    ).toHaveAttribute(
+      'href',
+      'https://www.tijd.be/dossiers/artificial-intelligence/artificiele-intelligentie-en-journalistiek-het-charter-van-de-tijd-en-l-echo/10510660.html'
     );
   });
 });
