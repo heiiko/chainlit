@@ -79,7 +79,7 @@ const Header = memo(() => {
         <ChatProfiles navigate={navigate} />
       </div>
 
-      <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2">
+      <div className="absolute top-1/2 left-1/2 mt-1 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2">
         <img src="public/icon/logo.png" alt="logo" className="h-10" />
         <svg
           aria-hidden="true"
