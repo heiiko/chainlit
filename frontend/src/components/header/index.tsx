@@ -83,13 +83,13 @@ const Header = memo(() => {
         <img src="public/icon/logo.png" alt="logo" className="h-10" />
         <svg
           aria-hidden="true"
-          className="h-8 w-auto shrink-0 bg-transparent"
+          className="h-6 w-auto shrink-0 bg-transparent"
           data-testid="header-logo-accent"
           fill={headerLogoAccentColor}
           focusable="false"
           height="116"
           stroke={headerLogoAccentColor}
-          style={{ alignSelf: 'flex-start' }}
+          style={{ alignSelf: 'flex-start', marginLeft: '-8px' }}
           viewBox="0 0 139 116"
           width="139"
           xmlns="http://www.w3.org/2000/svg"
