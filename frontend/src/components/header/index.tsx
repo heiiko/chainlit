@@ -209,7 +209,7 @@ const Header = memo(() => {
           id="header-info-banner"
           role="region"
           aria-label="Assistant information"
-          className="relative z-20 w-full shrink-0 bg-[color:var(--mfn-user-nav-avatar-background)] px-6 py-3 font-sans text-sm leading-5 text-white shadow-lg sm:px-8"
+          className="relative z-20 w-full shrink-0 bg-[color:var(--mfn-user-nav-avatar-background)] px-6 py-3 font-sans text-md leading-7 text-white shadow-lg sm:px-8"
         >
           {infoContent.beforeLink}{' '}
           <a

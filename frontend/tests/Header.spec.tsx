@@ -198,8 +198,10 @@ describe('Header', () => {
       'bg-[color:var(--mfn-user-nav-avatar-background)]',
       'text-white',
       'font-sans',
-      'text-sm'
+      'text-md',
+      'leading-7'
     );
+    expect(banner).not.toHaveClass('text-sm', 'leading-5');
     expect(banner).not.toHaveClass('absolute', 'top-full');
     expect(banner).toHaveTextContent(
       "Toutes réponses sur cette page sont générées par un assistant d’intelligence artificielle. Ces réponses sont exclusivement fondées sur les articles publiés par les journalistes de L'Echo. Des erreurs sont cependant possibles. En cas de doute, nous vous invitons à consulter les articles cités en source. Consultez la charte IA de L'Echo pour plus d’informations."
