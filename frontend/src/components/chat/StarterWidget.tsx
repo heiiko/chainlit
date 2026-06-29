@@ -76,7 +76,7 @@ function StarterPill({ autoScrollRef, starter }: StarterButtonProps) {
       onClick={onSubmit}
       className={cn(
         'inline-flex shrink-0 items-center gap-2 rounded-[999px] border border-[color:var(--mfn-starter-widget-pill-background,rgb(87,152,252))] bg-[color:var(--mfn-starter-widget-pill-background,rgb(87,152,252))] px-[15px] py-2.5 font-sans text-[14px] font-medium leading-none text-white transition-colors',
-        'hover:border-[color:var(--mfn-starter-widget-pill-background,rgb(87,152,252))] hover:bg-[color:var(--mfn-starter-widget-pill-background,rgb(87,152,252))] hover:text-white',
+        'hover:border-[color:var(--mfn-starter-widget-pill-background,rgb(87,152,252))] hover:bg-[color-mix(in_srgb,var(--mfn-starter-widget-pill-background,rgb(87,152,252))_86%,white)] hover:text-white',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         'disabled:cursor-not-allowed disabled:opacity-50'
       )}
@@ -102,7 +102,7 @@ function QuestionStarter({ autoScrollRef, starter }: StarterButtonProps) {
       disabled={disabled}
       onClick={onSubmit}
       className={cn(
-        'grid w-full grid-cols-[54px_minmax(0,1fr)] items-center gap-5 border-b py-3 text-left transition-colors first:border-t last:border-b-0',
+        'group grid w-full grid-cols-[54px_minmax(0,1fr)] items-center gap-5 border-b py-3 text-left transition-colors first:border-t last:border-b-0',
         'hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         'disabled:cursor-not-allowed disabled:opacity-50'
       )}
@@ -120,7 +120,7 @@ function QuestionStarter({ autoScrollRef, starter }: StarterButtonProps) {
           className="h-[54px] w-[54px] rounded-[9px] bg-[repeating-linear-gradient(135deg,#eef1f4_0,#eef1f4_0.85rem,#e8ecef_0.85rem,#e8ecef_1.7rem)]"
         />
       )}
-      <span className="font-serif text-[16px] leading-[1.38] text-foreground">
+      <span className="font-serif text-[16px] leading-[1.38] text-foreground underline-offset-2 group-hover:underline">
         {starter.label}
       </span>
     </button>

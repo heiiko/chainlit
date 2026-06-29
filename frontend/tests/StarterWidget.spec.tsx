@@ -131,6 +131,7 @@ describe('StarterWidget', () => {
       'rounded-[999px]',
       'bg-[color:var(--mfn-starter-widget-pill-background,rgb(87,152,252))]',
       'border-[color:var(--mfn-starter-widget-pill-background,rgb(87,152,252))]',
+      'hover:bg-[color-mix(in_srgb,var(--mfn-starter-widget-pill-background,rgb(87,152,252))_86%,white)]',
       'px-[15px]',
       'py-2.5',
       'text-white'
@@ -141,9 +142,11 @@ describe('StarterWidget', () => {
       'font-bold',
       'uppercase'
     );
-    expect(
-      screen.getByRole('button', { name: 'Waarom groeit de chipsector?' })
-    ).toBeInTheDocument();
+    const questionButton = screen.getByRole('button', {
+      name: 'Waarom groeit de chipsector?'
+    });
+    expect(questionButton).toBeInTheDocument();
+    expect(questionButton).toHaveClass('group');
     expect(screen.getByAltText('')).toHaveClass(
       'h-[54px]',
       'w-[54px]',
@@ -151,7 +154,9 @@ describe('StarterWidget', () => {
     );
     expect(screen.getByText('Waarom groeit de chipsector?')).toHaveClass(
       'text-[16px]',
-      'leading-[1.38]'
+      'leading-[1.38]',
+      'group-hover:underline',
+      'underline-offset-2'
     );
 
     fireEvent.click(screen.getByRole('button', { name: 'In het nieuws' }));
