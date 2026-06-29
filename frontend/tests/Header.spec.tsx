@@ -28,6 +28,15 @@ vi.mock('@/components/ui/sidebar', () => ({
   useSidebar: mocks.useSidebar
 }));
 
+vi.mock('@/components/ui/tooltip', () => ({
+  Tooltip: ({ children }: any) => <>{children}</>,
+  TooltipContent: ({ children }: any) => (
+    <div data-testid="tooltip-content">{children}</div>
+  ),
+  TooltipProvider: ({ children }: any) => <>{children}</>,
+  TooltipTrigger: ({ children }: any) => <>{children}</>
+}));
+
 vi.mock('@/components/AudioPresence', () => ({
   default: () => <div data-testid="audio-presence" />
 }));
@@ -167,6 +176,7 @@ describe('Header', () => {
     expect(infoButton).not.toHaveClass('text-muted-foreground');
     expect(infoIcon).toHaveClass('lucide-info', '!size-6');
     expect(infoIcon).toHaveAttribute('stroke-width', '2');
+    expect(screen.queryByText('Info')).not.toBeInTheDocument();
     expect(
       screen.queryByRole('region', { name: 'Assistant information' })
     ).not.toBeInTheDocument();
@@ -195,12 +205,16 @@ describe('Header', () => {
       "Toutes réponses sur cette page sont générées par un assistant d’intelligence artificielle. Ces réponses sont exclusivement fondées sur les articles publiés par les journalistes de L'Echo. Des erreurs sont cependant possibles. En cas de doute, nous vous invitons à consulter les articles cités en source. Consultez la charte IA de L'Echo pour plus d’informations."
     );
     expect(banner).not.toHaveTextContent('Lorem ipsum');
-    expect(
-      screen.getByRole('link', { name: "charte IA de L'Echo" })
-    ).toHaveAttribute(
+    const echoCharterLink = screen.getByRole('link', {
+      name: "charte IA de L'Echo"
+    });
+
+    expect(echoCharterLink).toHaveAttribute(
       'href',
       'https://www.lecho.be/dossiers/intelligence-artificielle/intelligence-artificielle-et-journalisme-la-charte-de-l-echo-et-du-tijd/10508789.html'
     );
+    expect(echoCharterLink).toHaveAttribute('target', '_blank');
+    expect(echoCharterLink).toHaveAttribute('rel', 'noopener noreferrer');
     expect(infoButton).toHaveAttribute('aria-expanded', 'true');
     expect(infoButton).toHaveAttribute(
       'aria-label',
@@ -230,11 +244,15 @@ describe('Header', () => {
     expect(banner).toHaveTextContent(
       'Deze AI-toepassing geeft antwoorden op basis van het archief van De Tijd. Weet dat AI in sommige gevallen fouten kan maken. Controleer daarom bij twijfel altijd de bronartikels waarnaar wordt verwezen. Raadpleeg het AI-charter van De Tijd voor meer informatie.'
     );
-    expect(
-      screen.getByRole('link', { name: 'AI-charter van De Tijd' })
-    ).toHaveAttribute(
+    const tijdCharterLink = screen.getByRole('link', {
+      name: 'AI-charter van De Tijd'
+    });
+
+    expect(tijdCharterLink).toHaveAttribute(
       'href',
       'https://www.tijd.be/dossiers/artificial-intelligence/artificiele-intelligentie-en-journalistiek-het-charter-van-de-tijd-en-l-echo/10510660.html'
     );
+    expect(tijdCharterLink).toHaveAttribute('target', '_blank');
+    expect(tijdCharterLink).toHaveAttribute('rel', 'noopener noreferrer');
   });
 });

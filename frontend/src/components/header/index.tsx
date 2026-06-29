@@ -18,7 +18,6 @@ import { useSidebar } from '@/components/ui/sidebar';
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
 import { Translator } from 'components/i18n';
@@ -83,29 +82,22 @@ const Header = memo(() => {
     chatSettingsInputs.length > 0;
 
   const infoButton = (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            id="header-info-button"
-            aria-controls="header-info-banner"
-            aria-expanded={showInfoBanner}
-            aria-label={
-              showInfoBanner
-                ? 'Hide assistant information'
-                : 'Show assistant information'
-            }
-            onClick={() => setShowInfoBanner((isVisible) => !isVisible)}
-            variant="ghost"
-            size="icon"
-            className="text-primary-foreground hover:text-muted-foreground"
-          >
-            <Info className="!size-6" strokeWidth={2} />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>Info</TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Button
+      id="header-info-button"
+      aria-controls="header-info-banner"
+      aria-expanded={showInfoBanner}
+      aria-label={
+        showInfoBanner
+          ? 'Hide assistant information'
+          : 'Show assistant information'
+      }
+      onClick={() => setShowInfoBanner((isVisible) => !isVisible)}
+      variant="ghost"
+      size="icon"
+      className="text-primary-foreground hover:text-muted-foreground"
+    >
+      <Info className="!size-6" strokeWidth={2} />
+    </Button>
   );
 
   return (
@@ -222,6 +214,8 @@ const Header = memo(() => {
           {infoContent.beforeLink}{' '}
           <a
             href={infoContent.linkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             className="font-medium text-white underline underline-offset-2 hover:text-white"
           >
             {infoContent.linkText}
