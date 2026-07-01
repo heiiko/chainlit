@@ -47,6 +47,19 @@ describe('ScrollContainer', () => {
     });
   });
 
+  it('hides horizontal overflow on the scrollable chat container', () => {
+    (useChatMessages as any).mockReturnValue({ messages: [] });
+
+    const { container } = render(
+      <ScrollContainer>
+        <div>Chat content</div>
+      </ScrollContainer>
+    );
+
+    const scrollableContainer = container.firstElementChild?.firstElementChild;
+    expect(scrollableContainer).toHaveClass('overflow-x-hidden');
+  });
+
   it('positions a new user message without smooth scrolling even when a planning step already follows it', async () => {
     (useChatMessages as any).mockReturnValue({
       messages: [
