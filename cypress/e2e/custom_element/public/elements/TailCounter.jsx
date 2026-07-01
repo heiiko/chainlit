@@ -2,7 +2,7 @@ import { X } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
-export default function Counter() {
+export default function TailCounter() {
   return (
     <div id="custom-counter" className="mt-4 flex flex-col gap-2">
       <div>{props.label}</div>

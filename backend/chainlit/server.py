@@ -802,6 +802,29 @@ async def project_translations(
     )
 
 
+def _serialize_starter_widget(widget):
+    if not widget:
+        return None
+
+    widget_dict = widget.to_dict() if hasattr(widget, "to_dict") else dict(widget)
+    if "initial_tab" in widget_dict:
+        widget_dict["initialTab"] = widget_dict.pop("initial_tab")
+    if "article_briefings" in widget_dict:
+        article_briefings = widget_dict.pop("article_briefings")
+        if article_briefings is not None:
+            if "audio_action_name" in article_briefings:
+                article_briefings["audioActionName"] = article_briefings.pop(
+                    "audio_action_name"
+                )
+            for article in article_briefings.get("articles") or []:
+                if "image_url" in article:
+                    article["imageUrl"] = article.pop("image_url")
+                if "article_url" in article:
+                    article["articleUrl"] = article.pop("article_url")
+            widget_dict["articleBriefings"] = article_briefings
+    return widget_dict
+
+
 @router.get("/project/settings")
 async def project_settings(
     current_user: UserParam,
@@ -830,6 +853,9 @@ async def project_settings(
             for p in chat_profiles:
                 d = p.to_dict()
                 d.pop("config_overrides", None)
+                starter_widget = d.pop("starter_widget", None)
+                if starter_widget is not None:
+                    d["starterWidget"] = _serialize_starter_widget(starter_widget)
                 profiles.append(d)
 
     starters = []
@@ -845,6 +871,20 @@ async def project_settings(
         )
         if sc:
             starter_categories = [it.to_dict() for it in sc]
+
+    starter_widget = None
+    if config.code.set_starter_widget:
+        sw = await config.code.set_starter_widget(current_user, effective_language)
+        if sw is not None:
+            starter_widget = _serialize_starter_widget(sw)
+
+    user_capabilities = {}
+    if config.code.set_user_capabilities:
+        capabilities = await config.code.set_user_capabilities(
+            current_user, effective_language
+        )
+        if isinstance(capabilities, dict):
+            user_capabilities = capabilities
 
     data_layer = get_data_layer()
     debug_url = (
@@ -876,6 +916,8 @@ async def project_settings(
             "chatProfiles": profiles,
             "starters": starters,
             "starterCategories": starter_categories,
+            "starterWidget": starter_widget,
+            "userCapabilities": user_capabilities,
             "debugUrl": debug_url,
         }
     )

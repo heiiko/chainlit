@@ -64,6 +64,9 @@ export default {
         },
         command: '#0066FF'
       },
+      fontSize: {
+        md: '1rem'
+      },
       keyframes: {
         'accordion-down': {
           from: {

@@ -198,7 +198,7 @@ const Chat = () => {
       // Disable the onFocus and onBlur events in react-dropzone to avoid interfering with child trigger events
       onBlur={undefined}
       onFocus={undefined}
-      className="flex w-full h-full flex-col relative"
+      className="flex w-full h-full min-h-0 flex-col relative"
     >
       {enableAttachments ? (
         <input id="#upload-drop-input" {...upload.getInputProps()} />
@@ -226,22 +226,18 @@ const Chat = () => {
             }}
           >
             <TaskList isMobile={true} />
-            <WelcomeScreen
-              fileSpec={fileSpec}
-              onFileUpload={onFileUpload}
-              onFileUploadError={onFileUploadError}
-              autoScrollRef={autoScrollRef}
-            />
+            <WelcomeScreen autoScrollRef={autoScrollRef} />
             <MessagesContainer navigate={navigate} />
           </div>
         </ScrollContainer>
         <div
-          className="flex flex-col mx-auto w-full p-4 pt-0"
+          className="flex shrink-0 flex-col mx-auto w-full p-4 pt-0"
           style={{
             maxWidth: layoutMaxWidth
           }}
         >
           <ChatFooter
+            showIfEmptyThread
             fileSpec={fileSpec}
             onFileUpload={onFileUpload}
             onFileUploadError={onFileUploadError}

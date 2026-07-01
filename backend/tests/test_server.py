@@ -114,6 +114,110 @@ async def test_project_settings(test_client: TestClient, mock_get_current_user: 
     assert "debugUrl" in data
     assert data["chatProfiles"] == []
     assert data["starters"] == []
+    assert data["starterWidget"] is None
+
+
+async def test_project_settings_with_starter_widget(
+    test_client: TestClient,
+    mock_get_current_user: Mock,
+    test_config: ChainlitConfig,
+):
+    from chainlit.types import (
+        Starter,
+        StarterWidget,
+        StarterWidgetArticleBriefing,
+        StarterWidgetArticleBriefings,
+        StarterWidgetHeader,
+        StarterWidgetTab,
+    )
+
+    test_config.code.set_starter_widget = AsyncMock(
+        return_value=StarterWidget(
+            header=StarterWidgetHeader(title="News Assistant"),
+            tabs=[
+                StarterWidgetTab(
+                    key="trending",
+                    label="Trending",
+                    heading="Current Questions",
+                    byline="Based on today's news",
+                    variant="list",
+                    starters=[Starter(label="Top stories", message="Top stories")],
+                )
+            ],
+            initial_tab="trending",
+            article_briefings=StarterWidgetArticleBriefings(
+                title="Hoofdpunten",
+                audio_action_name="readaloud_action",
+                labels={
+                    "listen": "Voorlezen",
+                    "open": "Lees het artikel",
+                },
+                articles=[
+                    StarterWidgetArticleBriefing(
+                        headline="Chipsector trekt de beurs hoger",
+                        bullets=[
+                            "De technologiesector wint terrein.",
+                            "Beleggers kijken naar nieuwe cijfers.",
+                            "Analisten blijven voorzichtig.",
+                        ],
+                        image_url="https://img.test/chips.jpg",
+                        article_url="https://www.tijd.be/chips",
+                        urn="urn:article:1",
+                    )
+                ],
+            ),
+        )
+    )
+
+    response = test_client.get("/project/settings")
+
+    assert response.status_code == 200, response.json()
+    data = response.json()
+    assert data["starterWidget"]["header"]["title"] == "News Assistant"
+    assert data["starterWidget"]["tabs"][0]["key"] == "trending"
+    assert data["starterWidget"]["tabs"][0]["heading"] == "Current Questions"
+    assert data["starterWidget"]["tabs"][0]["byline"] == "Based on today's news"
+    assert data["starterWidget"]["tabs"][0]["variant"] == "list"
+    assert data["starterWidget"]["tabs"][0]["starters"][0]["label"] == "Top stories"
+    assert data["starterWidget"]["initialTab"] == "trending"
+    assert data["starterWidget"]["articleBriefings"]["title"] == "Hoofdpunten"
+    assert (
+        data["starterWidget"]["articleBriefings"]["audioActionName"]
+        == "readaloud_action"
+    )
+    assert data["starterWidget"]["articleBriefings"]["labels"]["listen"] == "Voorlezen"
+    assert (
+        data["starterWidget"]["articleBriefings"]["articles"][0]["imageUrl"]
+        == "https://img.test/chips.jpg"
+    )
+    assert (
+        data["starterWidget"]["articleBriefings"]["articles"][0]["articleUrl"]
+        == "https://www.tijd.be/chips"
+    )
+
+
+async def test_project_settings_with_user_capabilities(
+    test_client: TestClient,
+    mock_get_current_user: Mock,
+    test_config: ChainlitConfig,
+):
+    user = PersistedUser(
+        id="test_user_id",
+        createdAt=datetime.datetime.now().isoformat(),
+        identifier="test_user_identifier",
+        metadata={"access_claim": "base"},
+    )
+    mock_get_current_user.return_value = user
+    test_config.code.set_user_capabilities = AsyncMock(
+        return_value={"features": {"voice_interaction": False}}
+    )
+
+    response = test_client.get("/project/settings?language=nl-BE")
+
+    assert response.status_code == 200, response.json()
+    data = response.json()
+    assert data["userCapabilities"] == {"features": {"voice_interaction": False}}
+    test_config.code.set_user_capabilities.assert_awaited_once_with(user, "nl-BE")
 
 
 def test_project_settings_path_traversal(

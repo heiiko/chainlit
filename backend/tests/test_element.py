@@ -120,6 +120,18 @@ class TestElementBase:
             assert element_side.display == "side"
             assert element_page.display == "page"
 
+    async def test_tail_display_is_only_supported_for_custom_elements(
+        self, mock_chainlit_context
+    ):
+        """Test tail display option is only supported by custom elements."""
+        async with mock_chainlit_context:
+            custom_element = CustomElement(name="test", display="tail")
+
+            assert custom_element.display == "tail"
+
+            with pytest.raises(ValueError):
+                File(name="test", url="https://example.com/file.pdf", display="tail")
+
     async def test_element_from_dict_file(self, mock_chainlit_context):
         """Test Element.from_dict() for File type."""
         async with mock_chainlit_context:

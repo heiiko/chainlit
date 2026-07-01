@@ -23,7 +23,9 @@ interface Props {
 const VoiceButton = ({ disabled }: Props) => {
   const { config } = useConfig();
   const { startConversation, endConversation, audioConnection } = useAudio();
-  const isEnabled = !!config?.features.audio.enabled;
+  const voiceInteractionEnabled =
+    config?.userCapabilities?.features?.voice_interaction !== false;
+  const isEnabled = !!config?.features.audio.enabled && voiceInteractionEnabled;
 
   useHotkeys(
     'p',

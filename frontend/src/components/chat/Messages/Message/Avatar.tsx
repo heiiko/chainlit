@@ -35,12 +35,13 @@ const MessageAvatar = ({ author, hide, isError, iconName }: Props) => {
   }, [config, chatProfile]);
 
   const avatarUrl = useMemo(() => {
-    if (config?.ui?.default_avatar_file_url)
-      return config?.ui?.default_avatar_file_url;
-    const isAssistant = !author || author === config?.ui.name;
-    if (isAssistant && selectedChatProfile?.icon) {
+    if (selectedChatProfile?.icon) {
       return selectedChatProfile.icon;
     }
+
+    if (config?.ui?.default_avatar_file_url)
+      return config?.ui?.default_avatar_file_url;
+
     return apiClient?.buildEndpoint(`/avatars/${author || 'default'}`);
   }, [apiClient, selectedChatProfile, config, author]);
 

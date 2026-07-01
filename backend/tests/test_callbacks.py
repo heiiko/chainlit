@@ -471,6 +471,24 @@ async def test_set_starters(mock_chainlit_context, test_config: config.ChainlitC
         assert result[0].message == "Test Message"
 
 
+async def test_set_user_capabilities(
+    mock_chainlit_context, test_config: config.ChainlitConfig
+):
+    from chainlit.callbacks import set_user_capabilities
+
+    async with mock_chainlit_context:
+
+        @set_user_capabilities
+        async def get_user_capabilities(user, language):
+            return {"features": {"voice_interaction": language == "nl-BE"}}
+
+        assert test_config.code.set_user_capabilities is not None
+
+        result = await test_config.code.set_user_capabilities(None, "nl-BE")
+
+        assert result == {"features": {"voice_interaction": True}}
+
+
 async def test_set_starters_language(
     mock_chainlit_context, test_config: config.ChainlitConfig
 ):

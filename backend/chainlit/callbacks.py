@@ -13,7 +13,13 @@ from chainlit.mcp import McpConnection
 from chainlit.message import Message
 from chainlit.oauth_providers import get_configured_oauth_providers
 from chainlit.step import Step, step
-from chainlit.types import ChatProfile, Starter, StarterCategory, ThreadDict
+from chainlit.types import (
+    ChatProfile,
+    Starter,
+    StarterCategory,
+    StarterWidget,
+    ThreadDict,
+)
 from chainlit.user import User
 from chainlit.utils import wrap_user_function
 
@@ -251,6 +257,33 @@ def set_chat_profiles(func):
 
 
 @overload
+def set_user_capabilities(
+    func: Callable[[Optional["User"]], Awaitable[Dict[str, Any]]],
+) -> Callable[[Optional["User"]], Awaitable[Dict[str, Any]]]: ...
+
+
+@overload
+def set_user_capabilities(
+    func: Callable[[Optional["User"], Optional["str"]], Awaitable[Dict[str, Any]]],
+) -> Callable[[Optional["User"], Optional["str"]], Awaitable[Dict[str, Any]]]: ...
+
+
+def set_user_capabilities(func):
+    """
+    Programmatic declaration of frontend-visible user capabilities.
+
+    Args:
+        func (Callable[[Optional["User"], Optional["str"]], Awaitable[Dict[str, Any]]]): The function declaring user capabilities.
+
+    Returns:
+        Callable[[Optional["User"], Optional["str"]], Awaitable[Dict[str, Any]]]: The decorated function.
+    """
+
+    config.code.set_user_capabilities = wrap_user_function(func)
+    return func
+
+
+@overload
 def set_starters(
     func: Callable[[Optional["User"]], Awaitable[List["Starter"]]],
 ) -> Callable[[Optional["User"]], Awaitable[List["Starter"]]]: ...
@@ -317,6 +350,33 @@ def set_starter_categories(func):
     """
 
     config.code.set_starter_categories = wrap_user_function(func)
+    return func
+
+
+@overload
+def set_starter_widget(
+    func: Callable[[Optional["User"]], Awaitable["StarterWidget"]],
+) -> Callable[[Optional["User"]], Awaitable["StarterWidget"]]: ...
+
+
+@overload
+def set_starter_widget(
+    func: Callable[[Optional["User"], Optional["str"]], Awaitable["StarterWidget"]],
+) -> Callable[[Optional["User"], Optional["str"]], Awaitable["StarterWidget"]]: ...
+
+
+def set_starter_widget(func):
+    """
+    Programmatic declaration of a structured starter widget rendered on the welcome screen.
+
+    Args:
+        func (Callable[[Optional["User"], Optional["str"]], Awaitable["StarterWidget"]]): The function declaring the starter widget with optional user and language arguments.
+
+    Returns:
+        Callable[[Optional["User"], Optional["str"]], Awaitable["StarterWidget"]]: The decorated function.
+    """
+
+    config.code.set_starter_widget = wrap_user_function(func)
     return func
 
 

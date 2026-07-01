@@ -9,7 +9,7 @@ import {
 
 import {
   ChainlitContext,
-  FileSpec,
+  IStarterWidget,
   useChatMessages,
   useChatSession,
   useConfig
@@ -18,17 +18,49 @@ import {
 import { Logo } from '@/components/Logo';
 import { Markdown } from '@/components/Markdown';
 
-import MessageComposer from './MessageComposer';
 import Starters from './Starters';
 
 interface Props {
-  fileSpec: FileSpec;
-  onFileUpload: (payload: File[]) => void;
-  onFileUploadError: (error: string) => void;
-  autoScrollRef: MutableRefObject<boolean>;
+  autoScrollRef?: MutableRefObject<boolean>;
 }
 
-export default function WelcomeScreen(props: Props) {
+const starterBackdropBackground =
+  'var(--mfn-header-background, hsl(var(--background)))';
+
+function StarterBackdrop({
+  includeOverscrollGuard = true
+}: {
+  includeOverscrollGuard?: boolean;
+}) {
+  return (
+    <>
+      {includeOverscrollGuard ? (
+        <div
+          aria-hidden="true"
+          data-testid="welcome-header-overscroll-backdrop"
+          className="pointer-events-none fixed left-0 top-0 z-0 h-[114px] w-screen"
+          style={{
+            backgroundColor: starterBackdropBackground
+          }}
+        />
+      ) : null}
+      <div
+        aria-hidden="true"
+        data-testid="welcome-header-backdrop"
+        className="pointer-events-none absolute left-1/2 top-[-100vh] z-0 h-[calc(100vh+54px)] w-screen -translate-x-1/2"
+        style={{
+          backgroundColor: starterBackdropBackground
+        }}
+      />
+    </>
+  );
+}
+
+function hasStarterWidgetContent(widget?: IStarterWidget) {
+  return Boolean(widget?.tabs?.some((tab) => tab.starters.length));
+}
+
+export default function WelcomeScreen({ autoScrollRef }: Props) {
   const apiClient = useContext(ChainlitContext);
   const { config } = useConfig();
   const { chatProfile } = useChatSession();
@@ -43,6 +75,23 @@ export default function WelcomeScreen(props: Props) {
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  const selectedChatProfile = useMemo(() => {
+    if (!chatProfile) return undefined;
+    return chatProfiles?.find((profile) => profile.name === chatProfile);
+  }, [chatProfile, chatProfiles]);
+
+  const hasStarterWidget = useMemo(() => {
+    if (selectedChatProfile?.starterWidget) {
+      return hasStarterWidgetContent(selectedChatProfile.starterWidget);
+    }
+
+    if (selectedChatProfile?.starters?.length) {
+      return false;
+    }
+
+    return hasStarterWidgetContent(config?.starterWidget);
+  }, [config, selectedChatProfile]);
 
   const logo = useMemo(() => {
     if (chatProfile && chatProfiles) {
@@ -62,6 +111,7 @@ export default function WelcomeScreen(props: Props) {
             />
             {currentChatProfile?.markdown_description ? (
               <Markdown
+                className="font-sans"
                 allowHtml={allowHtml}
                 latex={latex}
                 renderMarkdown={true}
@@ -77,19 +127,57 @@ export default function WelcomeScreen(props: Props) {
     return <Logo className="w-[200px] mb-2" />;
   }, [chatProfiles, chatProfile]);
 
-  if (hasMessage(messages)) return null;
+  const threadHasMessages = hasMessage(messages);
+  const showStarterBackdrop = hasStarterWidget;
+
+  if (threadHasMessages && !hasStarterWidget) return null;
+
+  if (threadHasMessages) {
+    return (
+      <div
+        id="welcome-screen"
+        className={cn(
+          'relative isolate flex w-full justify-center pb-8 welcome-screen transition-opacity duration-500 opacity-0 delay-100',
+          isVisible && 'opacity-100'
+        )}
+      >
+        {showStarterBackdrop ? (
+          <StarterBackdrop includeOverscrollGuard={false} />
+        ) : null}
+        <div
+          className={cn(
+            'relative z-10 flex flex-col gap-4 w-full items-center',
+            showStarterBackdrop && 'pt-[4px]'
+          )}
+          data-testid="welcome-content"
+        >
+          {logo}
+          <Starters autoScrollRef={autoScrollRef} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
       id="welcome-screen"
       className={cn(
-        'flex flex-col -mt-[60px] gap-4 w-full flex-grow items-center justify-center welcome-screen mx-auto transition-opacity duration-500 opacity-0 delay-100',
+        'relative isolate flex flex-col gap-4 w-full flex-grow welcome-screen mx-auto transition-opacity duration-500 opacity-0 delay-100',
         isVisible && 'opacity-100'
       )}
     >
-      {logo}
-      <MessageComposer {...props} />
-      <Starters />
+      {showStarterBackdrop ? <StarterBackdrop /> : null}
+      <div
+        className={cn(
+          'relative z-10 flex flex-col gap-4 w-full items-center',
+          showStarterBackdrop && 'pt-[4px]'
+        )}
+        data-testid="welcome-content"
+      >
+        {logo}
+        {hasStarterWidget ? <Starters autoScrollRef={autoScrollRef} /> : null}
+        {hasStarterWidget ? null : <Starters autoScrollRef={autoScrollRef} />}
+      </div>
     </div>
   );
 }

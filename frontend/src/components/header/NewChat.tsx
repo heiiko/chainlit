@@ -108,7 +108,7 @@ const NewChatButton = ({ navigate, onConfirm, ...buttonProps }: Props) => {
               variant="ghost"
               size="icon"
               id="new-chat-button"
-              className="text-muted-foreground hover:text-muted-foreground"
+              className="text-primary-foreground hover:text-muted-foreground"
               onClick={handleClickOpen}
               {...buttonProps}
             >

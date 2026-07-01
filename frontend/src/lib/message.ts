@@ -29,7 +29,10 @@ export const prepareContent = ({
   id: string;
   language?: string;
 }) => {
-  const elementNames = elements.map((e) => escapeRegExp(e.name));
+  const referenceableElements = elements.filter(
+    (e) => !(e.type === 'custom' && e.display === 'tail')
+  );
+  const elementNames = referenceableElements.map((e) => escapeRegExp(e.name));
 
   // Sort by descending length to avoid matching substrings
   elementNames.sort((a, b) => b.length - a.length);
@@ -46,7 +49,7 @@ export const prepareContent = ({
 
   if (elementRegexp) {
     preparedContent = preparedContent.replaceAll(elementRegexp, (match) => {
-      const element = elements.find((e) => {
+      const element = referenceableElements.find((e) => {
         const nameMatch = e.name === match;
         const scopeMatch = isForIdMatch(id, e?.forId);
         return nameMatch && scopeMatch;
