@@ -2,6 +2,8 @@
 
 This file provides guidance to AI agents when working with code in this repository.
 
+Before broad exploration, read `../PROJECT_MAP.md` if present. Use it to target the right repository and files.
+
 ## Backward Compatibility (CRITICAL)
 
 All changes **MUST** be backward-compatible. If a refactor or breaking change is unavoidable, notify the user and stop — do not proceed without explicit approval. When approved, prefer adding a compatibility layer over keeping legacy code in place.
@@ -9,6 +11,17 @@ All changes **MUST** be backward-compatible. If a refactor or breaking change is
 ## MCP-First Approach (CRITICAL)
 
 When available, **ALWAYS** prefer MCP servers over manual alternatives. Use **Context7** for docs/API references, **Serena** for code navigation/refactoring/memory, and **GitHub MCP** for issues/PRs/actions/commits/releases/code search. Fall back to CLI tools, direct file reads, or web searches **ONLY IF** the corresponding MCP is unavailable or cannot fulfill the request.
+
+## Token and context efficiency
+
+- Prefer targeted commands over broad reads. Start with focused patterns, file globs, and small ranges before expanding scope.
+- Useful first-pass commands include `git status --short`, `git diff --stat`, `git diff -- <path>`, `git log --oneline -n 20`, `rg "<pattern>" <path-or-glob>`, `head -n 80 <file>`, `tail -n 80 <file>`, and `sed -n 'start,endp' <file>`.
+- Avoid printing entire large files, generated files, dependency folders, lockfiles, build artifacts, coverage reports, minified files, full test logs, recursive `ls -R`, or full `git log` output unless the exact content is required.
+- For test failures, start with the failing test name, error summary, and smallest relevant stack trace section. Expand to full output when needed for subtle failures or final verification.
+- Summarize large outputs in your own words instead of pasting them back verbatim. If output was truncated or summarized, say so.
+- When a task grows large, briefly summarize the current state, key files touched, and next step before continuing.
+- Do not sacrifice correctness to save tokens. Read the exact source, diff, test output, or documentation when precision matters, especially for security-sensitive behavior, generated code, migrations, API contracts, and final verification.
+- Before claiming success, run an appropriate verification command and inspect the actual result.
 
 ## Overview
 
