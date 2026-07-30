@@ -186,7 +186,7 @@ export default function StarterWidget({ autoScrollRef, widget }: Props) {
   if (!tabs.length) return null;
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-7 overflow-hidden px-4 py-2">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-7 overflow-hidden py-2">
       {tabs.map((tab, index) => {
         const section =
           tab.variant === 'pills' ? (
