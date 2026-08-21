@@ -17,4 +17,6 @@ export interface IMode {
   id: string;
   name: string;
   options: IModeOption[];
+  select?: 'single' | 'multi';
+  tooltip?: string;
 }
