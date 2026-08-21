@@ -89,6 +89,7 @@ describe('ModePicker', () => {
     fireEvent.click(screen.getByRole('option', { name: 'Web' }));
 
     const trigger = screen.getByRole('button', { name: 'Sources' });
+    expect(trigger).not.toHaveClass('font-medium');
     expect(trigger.querySelectorAll('img')).toHaveLength(1);
     expect(trigger).toContainHTML('https://example.com/web.svg');
     expect(screen.getByRole('option', { name: 'Web' })).toHaveAttribute(

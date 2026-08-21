@@ -137,7 +137,7 @@ export const ModePicker = ({
         disabled={disabled}
         className={cn(
           'inline-flex items-center gap-1.5 h-7 px-2 rounded-md',
-          'text-xs font-medium',
+          'text-xs font-normal',
           'hover:bg-muted transition-colors',
           'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring',
           open && 'bg-muted'
