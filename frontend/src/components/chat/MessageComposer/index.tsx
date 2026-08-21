@@ -1,4 +1,9 @@
 import {
+  getModeValue,
+  getSelectedOptionIds,
+  updateModeSelection
+} from '@/lib/modeSelection';
+import {
   MutableRefObject,
   useCallback,
   useEffect,
@@ -17,11 +22,16 @@ import {
   useChatInteract,
   useConfig
 } from '@chainlit/react-client';
-import type { IMode, IModeOption } from '@chainlit/react-client';
 import { modesState } from '@chainlit/react-client';
 
 import { Settings } from '@/components/icons/Settings';
 import { Button } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 import { useTranslation } from 'components/i18n/Translator';
 
 import { useQuery } from '@/hooks/query';
@@ -95,26 +105,13 @@ export default function MessageComposer({
   const handleModeSelect = useCallback(
     (modeId: string, optionId: string) => {
       setModes((prevModes) =>
-        prevModes.map((mode) => {
-          if (mode.id !== modeId) return mode;
-          return {
-            ...mode,
-            options: mode.options.map((opt: IModeOption) => ({
-              ...opt,
-              default: opt.id === optionId
-            }))
-          };
-        })
+        prevModes.map((mode) =>
+          mode.id === modeId ? updateModeSelection(mode, optionId) : mode
+        )
       );
     },
     [setModes]
   );
-
-  // Helper to get selected option for a mode (the one with default=true, or first option)
-  const getSelectedOptionId = useCallback((mode: IMode): string | undefined => {
-    const defaultOpt = mode.options.find((opt) => opt.default);
-    return defaultOpt?.id || mode.options[0]?.id;
-  }, []);
 
   let promptValue = '';
   try {
@@ -158,12 +155,12 @@ export default function MessageComposer({
       attachments?: IAttachment[],
       selectedCommand?: string
     ) => {
-      // Build modes dict: only include modes that have selections
-      const modesDict: Record<string, string> = {};
+      // Single modes use a scalar value; multi modes always use an array.
+      const modesDict: Record<string, string | string[]> = {};
       modes.forEach((mode) => {
-        const selectedId = getSelectedOptionId(mode);
-        if (selectedId) {
-          modesDict[mode.id] = selectedId;
+        const value = getModeValue(mode);
+        if (value !== undefined) {
+          modesDict[mode.id] = value;
         }
       });
 
@@ -188,7 +185,7 @@ export default function MessageComposer({
       }
       sendMessage(message, fileReferences);
     },
-    [user, sendMessage, autoScrollRef, modes, getSelectedOptionId]
+    [user, sendMessage, autoScrollRef, modes]
   );
 
   const onReply = useCallback(
@@ -284,16 +281,25 @@ export default function MessageComposer({
             onFileUpload={onFileUpload}
           />
           {showSettingsInComposer && (
-            <Button
-              id="chat-settings-open-modal"
-              disabled={disabled}
-              onClick={() => setChatSettingsOpen(true)}
-              className="hover:bg-muted rounded-full"
-              variant="ghost"
-              size="icon"
-            >
-              <Settings className="!size-6" />
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    id="chat-settings-open-modal"
+                    disabled={disabled}
+                    onClick={() => setChatSettingsOpen(true)}
+                    className="hover:bg-muted rounded-full"
+                    variant="ghost"
+                    size="icon"
+                  >
+                    <Settings className="!size-6" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{t('navigation.user.menu.settings')}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           )}
           <McpButton disabled={disabled} />
           {modes.map((mode) => (
@@ -301,7 +307,7 @@ export default function MessageComposer({
               key={mode.id}
               mode={mode}
               disabled={disabled}
-              selectedOptionId={getSelectedOptionId(mode)}
+              selectedOptionIds={getSelectedOptionIds(mode)}
               onOptionSelect={handleModeSelect}
             />
           ))}

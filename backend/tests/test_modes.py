@@ -107,6 +107,25 @@ class TestMode:
         assert mode.id == "model"
         assert mode.name == "Model"
         assert len(mode.options) == 2
+        assert mode.select == "single"
+        assert mode.tooltip == ""
+
+    def test_multi_mode_creation(self):
+        """Test Mode supports opting into multiple selections."""
+        mode = Mode(
+            id="sources",
+            name="Sources",
+            options=[ModeOption(id="web", name="Web")],
+            select="multi",
+        )
+
+        assert mode.select == "multi"
+        assert mode.to_dict()["select"] == "multi"
+
+    def test_invalid_mode_select(self):
+        """Test Mode rejects unsupported selection behavior."""
+        with pytest.raises(ValueError, match="select must be 'single' or 'multi'"):
+            Mode(id="sources", name="Sources", select="invalid")  # type: ignore[arg-type]
 
     def test_mode_to_dict(self, mock_modes):
         """Test Mode serialization."""
@@ -117,6 +136,18 @@ class TestMode:
         assert mode_dict["name"] == "Model"
         assert len(mode_dict["options"]) == 2
         assert mode_dict["options"][0]["id"] == "gpt-4"
+
+    def test_mode_tooltip(self):
+        """Test Mode tooltip serialization."""
+        mode = Mode(
+            id="model",
+            name="Model",
+            options=[ModeOption(id="gpt-5", name="GPT-5")],
+            tooltip="Choose the model used for this message",
+        )
+
+        assert mode.tooltip == "Choose the model used for this message"
+        assert mode.to_dict()["tooltip"] == mode.tooltip
 
     def test_mode_default_option(self, mock_modes):
         """Test finding default option in mode."""
@@ -170,6 +201,15 @@ class TestMessageWithModes:
 
             assert "modes" in message_dict
             assert message_dict["modes"] == modes
+
+    async def test_message_with_multi_mode(self, mock_chainlit_context):
+        """Test that a multi mode is exposed as a list through msg.modes.get()."""
+        async with mock_chainlit_context:
+            message = cl.Message(content="Test", modes={"sources": ["web", "archive"]})
+
+            assert message.modes is not None
+            assert message.modes.get("sources") == ["web", "archive"]
+            assert message.to_dict()["modes"] == {"sources": ["web", "archive"]}
 
     async def test_message_from_dict_with_modes(self, mock_chainlit_context):
         """Test that Message.from_dict() correctly handles modes field."""

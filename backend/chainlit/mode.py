@@ -6,7 +6,7 @@ in the chat composer.
 """
 
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List, Literal, Optional
 
 from dataclasses_json import DataClassJsonMixin
 
@@ -35,17 +35,26 @@ class Mode(DataClassJsonMixin):
     """A category of options the user can select from.
 
     Each Mode represents a picker dropdown in the chat composer.
-    Users select exactly one option per mode.
+    Users select one option per mode by default, or multiple options when
+    ``select`` is set to ``"multi"``.
 
     Attributes:
         id: Unique identifier for this mode (e.g., "llm", "approach")
         name: Display name shown in the UI (e.g., "Model", "Approach")
         options: List of available options for this mode
+        select: Whether the mode accepts a single option or multiple options
+        tooltip: Text shown when the user hovers the mode picker
     """
 
     id: str
     name: str
     options: List[ModeOption] = field(default_factory=list)
+    select: Literal["single", "multi"] = "single"
+    tooltip: str = ""
+
+    def __post_init__(self) -> None:
+        if self.select not in ("single", "multi"):
+            raise ValueError("select must be 'single' or 'multi'")
 
     def get_default_option(self) -> Optional[ModeOption]:
         """Get the default option for this mode, or the first option if none is default."""
