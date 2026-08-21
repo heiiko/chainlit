@@ -4,7 +4,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@radix-ui/react-popover';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { useContext, useRef, useState } from 'react';
 
 import { ChainlitContext, IMode, IModeOption } from '@chainlit/react-client';
@@ -17,11 +17,17 @@ import {
   CommandItemAnimated,
   CommandListScrollable
 } from '@/components/ui/command';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 
 interface Props {
   mode: IMode;
   disabled?: boolean;
-  selectedOptionId?: string;
+  selectedOptionIds: string[];
   onOptionSelect: (modeId: string, optionId: string) => void;
 }
 
@@ -32,22 +38,24 @@ interface Props {
 export const ModePicker = ({
   mode,
   disabled = false,
-  selectedOptionId,
+  selectedOptionIds,
   onOptionSelect
 }: Props) => {
   const apiClient = useContext(ChainlitContext);
   const [open, setOpen] = useState(false);
+  const [tooltipOpen, setTooltipOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const popoverRef = useRef<HTMLDivElement>(null);
 
   const options = mode.options;
-  const selectedOption =
-    options.find((opt) => opt.id === selectedOptionId) || options[0];
+  const selectedOptions = options.filter((option) =>
+    selectedOptionIds.includes(option.id)
+  );
 
   // Handle option selection
   const handleOptionSelect = (option: IModeOption) => {
     onOptionSelect(mode.id, option.id);
-    setOpen(false);
+    if (mode.select !== 'multi') setOpen(false);
   };
 
   // Keyboard navigation
@@ -102,20 +110,14 @@ export const ModePicker = ({
         <img
           className={cn('rounded-md', className)}
           src={apiClient.buildEndpoint(icon)}
-          alt="Mode option icon"
+          alt=""
         />
       );
     }
 
     // Remote URL
     if (icon.startsWith('http://') || icon.startsWith('https://')) {
-      return (
-        <img
-          className={cn('rounded-md', className)}
-          src={icon}
-          alt="Mode option icon"
-        />
-      );
+      return <img className={cn('rounded-md', className)} src={icon} alt="" />;
     }
 
     // Lucide icon name
@@ -126,34 +128,64 @@ export const ModePicker = ({
 
   const Chevron = open ? ChevronUp : ChevronDown;
 
+  const trigger = (
+    <PopoverTrigger asChild>
+      <Button
+        id={`mode-picker-trigger-${mode.id}`}
+        variant="ghost"
+        size="sm"
+        disabled={disabled}
+        className={cn(
+          'inline-flex items-center gap-1.5 h-7 px-2 rounded-md',
+          'text-xs font-medium',
+          'hover:bg-muted transition-colors',
+          'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+          open && 'bg-muted'
+        )}
+        onKeyDown={handleKeyDown}
+      >
+        <span className="max-w-[120px] truncate">{mode.name}</span>
+        {selectedOptions
+          .filter((option) => option.icon)
+          .map((option) => (
+            <span key={option.id} className="inline-flex">
+              {renderIcon(option.icon, '!size-4')}
+            </span>
+          ))}
+        <Chevron className="!size-3.5 text-muted-foreground" />
+      </Button>
+    </PopoverTrigger>
+  );
+
+  const triggerWithTooltip = mode.tooltip ? (
+    <TooltipProvider delayDuration={100}>
+      <Tooltip
+        open={!open && tooltipOpen}
+        onOpenChange={(nextOpen) => setTooltipOpen(nextOpen && !open)}
+      >
+        <TooltipTrigger asChild>{trigger}</TooltipTrigger>
+        <TooltipContent>
+          <p>{mode.tooltip}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  ) : (
+    trigger
+  );
+
   return (
     <div
       className="mode-picker-wrapper inline-flex items-center"
       ref={popoverRef}
     >
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            id={`mode-picker-trigger-${mode.id}`}
-            variant="ghost"
-            size="sm"
-            disabled={disabled}
-            className={cn(
-              'inline-flex items-center gap-1.5 h-7 px-2 rounded-md',
-              'text-xs font-medium',
-              'hover:bg-muted transition-colors',
-              'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring',
-              open && 'bg-muted'
-            )}
-            onKeyDown={handleKeyDown}
-          >
-            {renderIcon(selectedOption?.icon, '!size-4')}
-            <span className="max-w-[120px] truncate">
-              {selectedOption?.name || mode.name}
-            </span>
-            <Chevron className="!size-3.5 text-muted-foreground" />
-          </Button>
-        </PopoverTrigger>
+      <Popover
+        open={open}
+        onOpenChange={(nextOpen) => {
+          setOpen(nextOpen);
+          if (nextOpen) setTooltipOpen(false);
+        }}
+      >
+        {triggerWithTooltip}
 
         <PopoverContent
           id={`mode-picker-popover-${mode.id}`}
@@ -171,37 +203,46 @@ export const ModePicker = ({
           <Command className="overflow-hidden bg-transparent">
             <CommandListScrollable maxItems={6} className="custom-scrollbar">
               <CommandGroup className="p-0">
-                {options.map((option, index) => (
-                  <CommandItemAnimated
-                    key={option.id}
-                    index={index}
-                    isSelected={index === selectedIndex}
-                    onMouseMove={() => handleMouseMove(index)}
-                    onSelect={() => handleOptionSelect(option)}
-                    className={cn(
-                      'flex items-start gap-2 px-2 py-2 cursor-pointer',
-                      selectedOptionId === option.id && 'bg-accent'
-                    )}
-                  >
-                    {renderIcon(
-                      option.icon,
-                      cn(
-                        '!size-5 mt-0.5 text-muted-foreground flex-shrink-0',
-                        index === selectedIndex && 'text-foreground'
-                      )
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-sm leading-tight">
-                        {option.name}
-                      </div>
-                      {option.description && (
-                        <div className="text-xs text-muted-foreground mt-0.5 leading-tight">
-                          {option.description}
-                        </div>
+                {options.map((option, index) => {
+                  const isOptionSelected = selectedOptionIds.includes(
+                    option.id
+                  );
+                  return (
+                    <CommandItemAnimated
+                      key={option.id}
+                      index={index}
+                      isSelected={index === selectedIndex}
+                      aria-selected={isOptionSelected}
+                      onMouseMove={() => handleMouseMove(index)}
+                      onSelect={() => handleOptionSelect(option)}
+                      className={cn(
+                        'flex items-start gap-2 px-2 py-2 cursor-pointer',
+                        isOptionSelected && 'bg-accent'
                       )}
-                    </div>
-                  </CommandItemAnimated>
-                ))}
+                    >
+                      {renderIcon(
+                        option.icon,
+                        cn(
+                          '!size-5 mt-0.5 text-muted-foreground flex-shrink-0',
+                          index === selectedIndex && 'text-foreground'
+                        )
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm leading-tight">
+                          {option.name}
+                        </div>
+                        {option.description && (
+                          <div className="text-xs text-muted-foreground mt-0.5 leading-tight">
+                            {option.description}
+                          </div>
+                        )}
+                      </div>
+                      {mode.select === 'multi' && isOptionSelected && (
+                        <Check className="!size-4 mt-0.5 flex-shrink-0" />
+                      )}
+                    </CommandItemAnimated>
+                  );
+                })}
               </CommandGroup>
             </CommandListScrollable>
           </Command>

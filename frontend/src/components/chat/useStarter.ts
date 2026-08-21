@@ -1,3 +1,4 @@
+import { getModeValue } from '@/lib/modeSelection';
 import { MutableRefObject, useCallback, useContext } from 'react';
 import { useRecoilValue } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
@@ -40,12 +41,11 @@ export function useStarterAction(
   const disabled = loading || !connected;
 
   const onSubmit = useCallback(async () => {
-    const modesDict: Record<string, string> = {};
+    const modesDict: Record<string, string | string[]> = {};
     modes.forEach((mode) => {
-      const defaultOpt = mode.options.find((opt) => opt.default);
-      const selectedId = defaultOpt?.id || mode.options[0]?.id;
-      if (selectedId) {
-        modesDict[mode.id] = selectedId;
+      const value = getModeValue(mode);
+      if (value !== undefined) {
+        modesDict[mode.id] = value;
       }
     });
 
