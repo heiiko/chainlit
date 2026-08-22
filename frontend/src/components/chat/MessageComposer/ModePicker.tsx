@@ -215,10 +215,7 @@ export const ModePicker = ({
                       aria-selected={isOptionSelected}
                       onMouseMove={() => handleMouseMove(index)}
                       onSelect={() => handleOptionSelect(option)}
-                      className={cn(
-                        'flex items-start gap-2 px-2 py-2 cursor-pointer',
-                        isOptionSelected && 'bg-accent'
-                      )}
+                      className="flex items-start gap-2 px-2 py-2 cursor-pointer bg-transparent"
                     >
                       {renderIcon(
                         option.icon,

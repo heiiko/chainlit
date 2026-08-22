@@ -76,7 +76,11 @@ describe('ModePicker', () => {
     fireEvent.click(screen.getByRole('option', { name: 'Archive' }));
 
     const trigger = screen.getByRole('button', { name: 'Sources' });
-    expect(screen.getByRole('option', { name: 'Archive' })).toBeInTheDocument();
+    const selectedOption = screen.getByRole('option', { name: 'Archive' });
+    expect(selectedOption).toBeInTheDocument();
+    expect(selectedOption).not.toHaveClass('bg-accent');
+    fireEvent.mouseMove(selectedOption);
+    expect(selectedOption).not.toHaveClass('bg-accent');
     expect(trigger.querySelectorAll('img')).toHaveLength(2);
     expect(trigger).toContainHTML('https://example.com/web.svg');
     expect(trigger).toContainHTML('https://example.com/archive.svg');
