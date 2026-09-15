@@ -47,7 +47,7 @@ const infoBannerContent = {
   },
   nl: {
     beforeLink:
-      'Deze AI-toepassing geeft antwoorden op basis van het archief van De Tijd. Weet dat AI in sommige gevallen fouten kan maken. Controleer daarom bij twijfel altijd de bronartikels waarnaar wordt verwezen. Raadpleeg het',
+      'Snel weer mee of een onderwerp beter begrijpen? Deze AI-toepassing geeft antwoorden op basis van het archief van De Tijd. Weet dat AI in sommige gevallen fouten kan maken. Controleer daarom bij twijfel altijd de bronartikels waarnaar wordt verwezen. Raadpleeg het',
     linkText: 'AI-charter van De Tijd',
     linkUrl:
       'https://www.tijd.be/dossiers/artificial-intelligence/artificiele-intelligentie-en-journalistiek-het-charter-van-de-tijd-en-l-echo/10510660.html',

@@ -244,7 +244,7 @@ describe('Header', () => {
     });
 
     expect(banner).toHaveTextContent(
-      'Deze AI-toepassing geeft antwoorden op basis van het archief van De Tijd. Weet dat AI in sommige gevallen fouten kan maken. Controleer daarom bij twijfel altijd de bronartikels waarnaar wordt verwezen. Raadpleeg het AI-charter van De Tijd voor meer informatie.'
+      'Snel weer mee of een onderwerp beter begrijpen? Deze AI-toepassing geeft antwoorden op basis van het archief van De Tijd. Weet dat AI in sommige gevallen fouten kan maken. Controleer daarom bij twijfel altijd de bronartikels waarnaar wordt verwezen. Raadpleeg het AI-charter van De Tijd voor meer informatie.'
     );
     const tijdCharterLink = screen.getByRole('link', {
       name: 'AI-charter van De Tijd'
