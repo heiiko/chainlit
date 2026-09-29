@@ -11,7 +11,8 @@ const mocks = vi.hoisted(() => ({
   useConfig: vi.fn(),
   useSidebar: vi.fn(),
   buildEndpoint: vi.fn((path: string) => `http://localhost:8000/nl${path}`),
-  navigate: vi.fn()
+  navigate: vi.fn(),
+  openNewChat: vi.fn()
 }));
 
 vi.mock('api', () => ({
@@ -59,7 +60,14 @@ vi.mock('@/components/header/ChatProfiles', () => ({
 }));
 
 vi.mock('@/components/header/NewChat', () => ({
-  default: () => <button type="button">New chat</button>
+  default: () => <button type="button">New chat button</button>,
+  NewChatDialog: () => null,
+  useNewChatAction: () => ({
+    open: false,
+    handleClickOpen: mocks.openNewChat,
+    handleClose: vi.fn(),
+    handleConfirm: vi.fn()
+  })
 }));
 
 vi.mock('@/components/header/Readme', () => ({
@@ -84,6 +92,7 @@ vi.mock('@/components/header/UserNav', () => ({
 
 describe('Header', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     window.history.pushState({}, '', '/fr/');
     mocks.useAudio.mockReturnValue({ audioConnection: 'off' });
     mocks.useAuth.mockReturnValue({ data: { requireLogin: false } });
@@ -127,6 +136,23 @@ describe('Header', () => {
       'left-1/2',
       'mt-1'
     );
+  });
+
+  it('opens the new chat action when the logo container is clicked', () => {
+    render(
+      <RecoilRoot>
+        <Header />
+      </RecoilRoot>
+    );
+
+    const logoTrigger = screen.getByRole('button', { name: 'New chat' });
+    expect(logoTrigger).toContainElement(
+      screen.getByRole('img', { name: 'logo' })
+    );
+
+    fireEvent.click(logoTrigger);
+
+    expect(mocks.openNewChat).toHaveBeenCalledTimes(1);
   });
 
   it.each(['/nl', '/nl/', '/nl/thread/123'])(

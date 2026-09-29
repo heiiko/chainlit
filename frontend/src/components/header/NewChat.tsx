@@ -72,7 +72,10 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onConfirm?: () => void;
 }
 
-const NewChatButton = ({ navigate, onConfirm, ...buttonProps }: Props) => {
+export const useNewChatAction = ({
+  navigate,
+  onConfirm
+}: Pick<Props, 'navigate' | 'onConfirm'>) => {
   const [open, setOpen] = useState(false);
   const { clear } = useChatInteract();
   const { config } = useConfig();
@@ -98,6 +101,13 @@ const NewChatButton = ({ navigate, onConfirm, ...buttonProps }: Props) => {
     }
     handleClose();
   };
+
+  return { open, handleClickOpen, handleClose, handleConfirm };
+};
+
+const NewChatButton = ({ navigate, onConfirm, ...buttonProps }: Props) => {
+  const { open, handleClickOpen, handleClose, handleConfirm } =
+    useNewChatAction({ navigate, onConfirm });
 
   return (
     <div>

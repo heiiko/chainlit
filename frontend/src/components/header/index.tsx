@@ -27,7 +27,7 @@ import { chatSettingsSidebarOpenState } from '@/state/project';
 
 import ApiKeys from './ApiKeys';
 import ChatProfiles from './ChatProfiles';
-import NewChatButton from './NewChat';
+import NewChatButton, { NewChatDialog, useNewChatAction } from './NewChat';
 import ReadmeButton from './Readme';
 import ShareButton from './Share';
 import SidebarTrigger from './SidebarTrigger';
@@ -64,6 +64,7 @@ const Header = memo(() => {
   const { chatSettingsInputs } = useChatData();
   const { open, openMobile, isMobile } = useSidebar();
   const [showInfoBanner, setShowInfoBanner] = useState(false);
+  const newChat = useNewChatAction({ navigate });
   const setChatSettingsSidebarOpen = useSetRecoilState(
     chatSettingsSidebarOpenState
   );
@@ -123,7 +124,12 @@ const Header = memo(() => {
           <ChatProfiles navigate={navigate} />
         </div>
 
-        <div className="absolute top-1/2 left-1/2 mt-1 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2">
+        <button
+          type="button"
+          aria-label="New chat"
+          className="absolute top-1/2 left-1/2 mt-1 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 cursor-pointer"
+          onClick={newChat.handleClickOpen}
+        >
           <img
             src={apiClient.buildEndpoint('/public/icon/logo.png')}
             alt="logo"
@@ -168,7 +174,7 @@ const Header = memo(() => {
               barSpacing={2}
             />
           ) : null}
-        </div>
+        </button>
 
         <div />
         <div className="flex items-center gap-1">
@@ -209,6 +215,11 @@ const Header = memo(() => {
           <UserNav />
         </div>
       </div>
+      <NewChatDialog
+        open={newChat.open}
+        handleClose={newChat.handleClose}
+        handleConfirm={newChat.handleConfirm}
+      />
       {showInfoBanner ? (
         <div
           id="header-info-banner"
