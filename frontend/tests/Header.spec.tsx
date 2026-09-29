@@ -10,7 +10,12 @@ const mocks = vi.hoisted(() => ({
   useChatData: vi.fn(),
   useConfig: vi.fn(),
   useSidebar: vi.fn(),
+  buildEndpoint: vi.fn((path: string) => `http://localhost:8000/nl${path}`),
   navigate: vi.fn()
+}));
+
+vi.mock('api', () => ({
+  apiClient: { buildEndpoint: mocks.buildEndpoint }
 }));
 
 vi.mock('react-router-dom', () => ({
@@ -109,7 +114,11 @@ describe('Header', () => {
     const header = logo.closest('#header');
 
     expect(header).toHaveClass('relative', 'z-20');
-    expect(logo).toHaveAttribute('src', 'public/icon/logo.png');
+    expect(logo).toHaveAttribute(
+      'src',
+      'http://localhost:8000/nl/public/icon/logo.png'
+    );
+    expect(mocks.buildEndpoint).toHaveBeenCalledWith('/public/icon/logo.png');
     expect(logo).toHaveClass('h-10');
     expect(logo).not.toHaveClass('w-10');
     expect(logo.parentElement).toHaveClass(
@@ -119,6 +128,24 @@ describe('Header', () => {
       'mt-1'
     );
   });
+
+  it.each(['/nl', '/nl/', '/nl/thread/123'])(
+    'uses the mount path for the logo on %s',
+    (path) => {
+      window.history.pushState({}, '', path);
+
+      render(
+        <RecoilRoot>
+          <Header />
+        </RecoilRoot>
+      );
+
+      expect(screen.getByRole('img', { name: 'logo' })).toHaveAttribute(
+        'src',
+        'http://localhost:8000/nl/public/icon/logo.png'
+      );
+    }
+  );
 
   it('renders the themed SVG accent after the header logo', () => {
     render(

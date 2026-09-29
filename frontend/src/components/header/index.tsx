@@ -1,3 +1,4 @@
+import { apiClient } from 'api';
 import { Info } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -123,7 +124,11 @@ const Header = memo(() => {
         </div>
 
         <div className="absolute top-1/2 left-1/2 mt-1 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2">
-          <img src="public/icon/logo.png" alt="logo" className="h-10" />
+          <img
+            src={apiClient.buildEndpoint('/public/icon/logo.png')}
+            alt="logo"
+            className="h-10"
+          />
           <svg
             aria-hidden="true"
             className="h-6 w-auto shrink-0 bg-transparent"
