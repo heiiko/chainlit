@@ -117,13 +117,13 @@ const Header = memo(() => {
         <button
           type="button"
           aria-label="New chat"
-          className="absolute top-1/2 left-1/2 mt-1 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 cursor-pointer"
+          className="absolute top-1/2 left-1/2 mt-1 flex w-max -translate-x-1/2 -translate-y-1/2 items-center gap-2 cursor-pointer"
           onClick={newChat.handleClickOpen}
         >
           <img
             src={apiClient.buildEndpoint('/public/icon/logo-ai.png')}
             alt="logo"
-            className="h-10"
+            className="h-10 w-auto max-w-none shrink-0"
           />
           {audioConnection === 'on' ? (
             <AudioPresence
