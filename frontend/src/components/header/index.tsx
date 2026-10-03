@@ -117,7 +117,7 @@ const Header = memo(() => {
         <button
           type="button"
           aria-label="New chat"
-          className="absolute top-1/2 left-1/2 mt-1 flex w-max -translate-x-1/2 -translate-y-1/2 items-center gap-2 cursor-pointer"
+          className="absolute top-1/2 left-4 mt-1 flex w-max -translate-y-1/2 items-center gap-2 px-2 cursor-pointer sm:left-1/2 sm:-translate-x-1/2 sm:px-0"
           onClick={newChat.handleClickOpen}
         >
           <img
