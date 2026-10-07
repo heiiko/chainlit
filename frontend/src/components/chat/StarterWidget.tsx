@@ -94,6 +94,7 @@ function QuestionStarter({ autoScrollRef, starter }: StarterButtonProps) {
     autoScrollRef
   );
   const iconSrc = resolveStarterIconUrl(apiClient, starter.icon);
+  const fallbackIconSrc = apiClient.buildEndpoint('/public/icon/logo.png');
 
   return (
     <button
@@ -113,6 +114,11 @@ function QuestionStarter({ autoScrollRef, starter }: StarterButtonProps) {
           src={iconSrc}
           alt=""
           loading="lazy"
+          onError={(event) => {
+            if (event.currentTarget.getAttribute('src') !== fallbackIconSrc) {
+              event.currentTarget.src = fallbackIconSrc;
+            }
+          }}
         />
       ) : (
         <span

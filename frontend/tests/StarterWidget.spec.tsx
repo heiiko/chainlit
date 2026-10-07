@@ -49,6 +49,42 @@ describe('StarterWidget', () => {
     }));
   });
 
+  it('uses the public logo when a question starter image fails', () => {
+    render(
+      <RecoilRoot>
+        <StarterWidget
+          widget={{
+            tabs: [
+              {
+                key: 'questions',
+                label: 'Questions',
+                starters: [
+                  {
+                    label: 'What happened?',
+                    message: 'What happened?',
+                    icon: 'https://img.test/broken.jpg'
+                  }
+                ]
+              }
+            ]
+          }}
+        />
+      </RecoilRoot>
+    );
+
+    const image = screen
+      .getByRole('button', {
+        name: 'What happened?'
+      })
+      .querySelector('img');
+
+    expect(image).toHaveAttribute('src', 'https://img.test/broken.jpg');
+    fireEvent.error(image!);
+    expect(image).toHaveAttribute('src', '/public/icon/logo.png');
+    fireEvent.error(image!);
+    expect(image).toHaveAttribute('src', '/public/icon/logo.png');
+  });
+
   it('renders all starter sections in one overview and sends starter messages', () => {
     const autoScrollRef = { current: false };
     const StarterWidgetWithProps = StarterWidget as any;
