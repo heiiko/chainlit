@@ -37,15 +37,15 @@ import UserNav from './UserNav';
 const infoBannerContent = {
   fr: {
     beforeLink:
-      "Toutes réponses sur cette page sont générées par un assistant d’intelligence artificielle. Ces réponses sont exclusivement fondées sur les articles publiés par les journalistes de L'Echo. Des erreurs sont cependant possibles. En cas de doute, nous vous invitons à consulter les articles cités en source. Consultez la",
+      'Les réponses générées sur cette page sont générées par un assistant d’intelligence artificielle. Ces réponses sont exclusivement fondées sur les articles des journalistes de L’Echo. Des erreurs sont cependant possibles. En cas de doute, consultez les articles cités et la ',
     linkText: "charte IA de L'Echo",
     linkUrl:
       'https://www.lecho.be/dossiers/intelligence-artificielle/intelligence-artificielle-et-journalisme-la-charte-de-l-echo-et-du-tijd/10508789.html',
-    afterLink: ' pour plus d’informations.'
+    afterLink: '.'
   },
   nl: {
     beforeLink:
-      'Snel weer mee of een onderwerp beter begrijpen? Deze AI-toepassing geeft antwoorden op basis van het archief van De Tijd. Weet dat AI in sommige gevallen fouten kan maken. Controleer daarom bij twijfel altijd de bronartikels waarnaar wordt verwezen. Raadpleeg het',
+      'Deze AI-toepassing geeft antwoorden op basis van het archief van De Tijd. Weet dat AI in sommige gevallen fouten kan maken. Controleer daarom bij twijfel altijd de bronartikels waarnaar wordt verwezen. Raadpleeg het',
     linkText: 'AI-charter van De Tijd',
     linkUrl:
       'https://www.tijd.be/dossiers/artificial-intelligence/artificiele-intelligentie-en-journalistiek-het-charter-van-de-tijd-en-l-echo/10510660.html',

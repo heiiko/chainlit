@@ -230,7 +230,7 @@ describe('Header', () => {
     expect(banner).not.toHaveClass('text-md', 'leading-5');
     expect(banner).not.toHaveClass('absolute', 'top-full');
     expect(banner).toHaveTextContent(
-      "Toutes réponses sur cette page sont générées par un assistant d’intelligence artificielle. Ces réponses sont exclusivement fondées sur les articles publiés par les journalistes de L'Echo. Des erreurs sont cependant possibles. En cas de doute, nous vous invitons à consulter les articles cités en source. Consultez la charte IA de L'Echo pour plus d’informations."
+      "Les réponses générées sur cette page sont générées par un assistant d’intelligence artificielle. Ces réponses sont exclusivement fondées sur les articles des journalistes de L’Echo. Des erreurs sont cependant possibles. En cas de doute, consultez les articles cités et la charte IA de L'Echo."
     );
     expect(banner).not.toHaveTextContent('Lorem ipsum');
     const echoCharterLink = screen.getByRole('link', {
@@ -270,7 +270,7 @@ describe('Header', () => {
     });
 
     expect(banner).toHaveTextContent(
-      'Snel weer mee of een onderwerp beter begrijpen? Deze AI-toepassing geeft antwoorden op basis van het archief van De Tijd. Weet dat AI in sommige gevallen fouten kan maken. Controleer daarom bij twijfel altijd de bronartikels waarnaar wordt verwezen. Raadpleeg het AI-charter van De Tijd voor meer informatie.'
+      'Deze AI-toepassing geeft antwoorden op basis van het archief van De Tijd. Weet dat AI in sommige gevallen fouten kan maken. Controleer daarom bij twijfel altijd de bronartikels waarnaar wordt verwezen. Raadpleeg het AI-charter van De Tijd voor meer informatie.'
     );
     const tijdCharterLink = screen.getByRole('link', {
       name: 'AI-charter van De Tijd'
