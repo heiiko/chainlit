@@ -23,6 +23,8 @@ import {
 } from '@/components/ui/tooltip';
 import { Translator } from 'components/i18n';
 
+import { useLayoutMaxWidth } from '@/hooks/useLayoutMaxWidth';
+
 import { chatSettingsSidebarOpenState } from '@/state/project';
 
 import ApiKeys from './ApiKeys';
@@ -58,6 +60,7 @@ const Header = memo(() => {
   const navigate = useNavigate();
   const { data } = useAuth();
   const { config } = useConfig();
+  const layoutMaxWidth = useLayoutMaxWidth();
   const { chatSettingsInputs } = useChatData();
   const { open, openMobile, isMobile } = useSidebar();
   const [showInfoBanner, setShowInfoBanner] = useState(false);
@@ -185,18 +188,25 @@ const Header = memo(() => {
           id="header-info-banner"
           role="region"
           aria-label="Assistant information"
-          className="relative z-20 w-full shrink-0 bg-[color:var(--mfn-user-nav-avatar-background)] px-6 py-3 font-sans text-sm leading-7 text-white shadow-lg sm:px-8"
+          className="relative z-20 w-full shrink-0 bg-[color:var(--mfn-user-nav-avatar-background)] py-3 font-sans text-sm leading-7 text-white shadow-lg"
         >
-          {infoContent.beforeLink}{' '}
-          <a
-            href={infoContent.linkUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-white underline underline-offset-2 hover:text-white"
+          <div
+            className="mx-auto w-full px-4"
+            style={{ maxWidth: layoutMaxWidth }}
           >
-            {infoContent.linkText}
-          </a>
-          {infoContent.afterLink}
+            <div className="mx-auto w-full max-w-3xl">
+              {infoContent.beforeLink}{' '}
+              <a
+                href={infoContent.linkUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-white underline underline-offset-2 hover:text-white"
+              >
+                {infoContent.linkText}
+              </a>
+              {infoContent.afterLink}
+            </div>
+          </div>
         </div>
       ) : null}
     </>
