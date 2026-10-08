@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { LoginForm } from '@/components/LoginForm';
-import { Logo } from '@/components/Logo';
 import { useTheme } from '@/components/ThemeProvider';
 
 import { useQuery } from 'hooks/query';
@@ -85,7 +84,11 @@ export default function Login() {
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
-          <Logo className="w-[150px]" />
+          <img
+            src={apiClient.buildEndpoint('/public/icon/login-logo.png')}
+            alt="logo"
+            className="ai-logo w-[150px]"
+          />
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
