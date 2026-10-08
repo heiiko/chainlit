@@ -80,12 +80,15 @@ export function LoginForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className={cn('flex flex-col gap-6')}
+      className={cn('flex flex-col gap-10 sm:gap-[46px]')}
     >
-      <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold">
+      <div className="flex flex-col items-center gap-4 text-center">
+        <h1 className="font-serif text-[28px] font-semibold leading-tight text-[#212529] dark:text-foreground sm:text-[32px]">
           <Translator path="auth.login.title" />
         </h1>
+        <div className="font-serif text-xl leading-[1.25] text-[#5b5b5b] dark:text-muted-foreground sm:text-[23px] sm:leading-[30px]">
+          <Translator path="auth.login.description" />
+        </div>
       </div>
 
       {errorState && (
@@ -164,7 +167,11 @@ export function LoginForm({
               )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button
+              type="submit"
+              className="mx-auto h-12 w-full max-w-[330px]"
+              disabled={loading}
+            >
               <Translator path="auth.login.form.actions.signin" />
             </Button>
           </>
@@ -179,7 +186,7 @@ export function LoginForm({
         ) : null}
 
         {oAuthReady ? (
-          <div className="grid gap-2">
+          <div className="mx-auto grid w-full max-w-[330px] gap-2 [&>button]:h-[46px] [&>button]:rounded-[3px] [&>button]:border-0 [&>button]:!bg-[#009d00] [&>button]:text-base [&>button]:font-bold [&>button]:!text-white [&>button:hover]:!bg-[#008800]">
             {providers.map((provider, index) => (
               <ProviderButton
                 key={`provider-${index}`}

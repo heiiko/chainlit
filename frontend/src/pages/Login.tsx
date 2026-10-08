@@ -82,28 +82,24 @@ export default function Login() {
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
-      <div className="flex flex-col gap-4 p-6 md:p-10">
-        <div className="flex justify-center gap-2">
-          <img
-            src={apiClient.buildEndpoint('/public/icon/login-logo.png')}
-            alt="logo"
-            className="ai-logo w-[150px]"
+      <div className="flex min-h-svh flex-col items-center gap-10 px-6 py-12 md:px-10 lg:pt-[max(3rem,19.36svh)]">
+        <img
+          src={apiClient.buildEndpoint('/public/icon/login-logo.png')}
+          alt="logo"
+          className="ai-logo w-[120px]"
+        />
+        <div className="w-full max-w-lg">
+          <LoginForm
+            error={error}
+            callbackUrl="/"
+            providers={config?.oauthProviders || []}
+            onPasswordSignIn={
+              config?.passwordAuth ? handlePasswordLogin : undefined
+            }
+            onOAuthSignIn={async (provider: string) => {
+              window.location.href = apiClient.getOAuthEndpoint(provider);
+            }}
           />
-        </div>
-        <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-xs">
-            <LoginForm
-              error={error}
-              callbackUrl="/"
-              providers={config?.oauthProviders || []}
-              onPasswordSignIn={
-                config?.passwordAuth ? handlePasswordLogin : undefined
-              }
-              onOAuthSignIn={async (provider: string) => {
-                window.location.href = apiClient.getOAuthEndpoint(provider);
-              }}
-            />
-          </div>
         </div>
       </div>
       {!config?.headerAuth ? (
