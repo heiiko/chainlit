@@ -1,21 +1,13 @@
 import { cn, hasMessage } from '@/lib/utils';
-import {
-  MutableRefObject,
-  useContext,
-  useEffect,
-  useMemo,
-  useState
-} from 'react';
+import { MutableRefObject, useEffect, useMemo, useState } from 'react';
 
 import {
-  ChainlitContext,
   IStarterWidget,
   useChatMessages,
   useChatSession,
   useConfig
 } from '@chainlit/react-client';
 
-import { Logo } from '@/components/Logo';
 import { Markdown } from '@/components/Markdown';
 
 import Starters from './Starters';
@@ -61,7 +53,6 @@ function hasStarterWidgetContent(widget?: IStarterWidget) {
 }
 
 export default function WelcomeScreen({ autoScrollRef }: Props) {
-  const apiClient = useContext(ChainlitContext);
   const { config } = useConfig();
   const { chatProfile } = useChatSession();
   const { messages } = useChatMessages();
@@ -93,38 +84,28 @@ export default function WelcomeScreen({ autoScrollRef }: Props) {
     return hasStarterWidgetContent(config?.starterWidget);
   }, [config, selectedChatProfile]);
 
-  const logo = useMemo(() => {
+  const profileDescription = useMemo(() => {
     if (chatProfile && chatProfiles) {
       const currentChatProfile = chatProfiles.find(
         (cp) => cp.name === chatProfile
       );
-      if (currentChatProfile?.icon) {
+      if (currentChatProfile?.icon && currentChatProfile.markdown_description) {
         return (
           <div className="flex flex-col gap-2 mb-2 items-center">
-            <img
-              className="h-16 w-16 rounded-full"
-              src={
-                currentChatProfile?.icon.startsWith('/public')
-                  ? apiClient.buildEndpoint(currentChatProfile?.icon)
-                  : currentChatProfile?.icon
-              }
-            />
-            {currentChatProfile?.markdown_description ? (
-              <Markdown
-                className="font-sans"
-                allowHtml={allowHtml}
-                latex={latex}
-                renderMarkdown={true}
-              >
-                {currentChatProfile.markdown_description}
-              </Markdown>
-            ) : null}
+            <Markdown
+              className="font-sans"
+              allowHtml={allowHtml}
+              latex={latex}
+              renderMarkdown={true}
+            >
+              {currentChatProfile.markdown_description}
+            </Markdown>
           </div>
         );
       }
     }
 
-    return <Logo className="w-[200px] mb-2" />;
+    return null;
   }, [chatProfiles, chatProfile]);
 
   const threadHasMessages = hasMessage(messages);
@@ -151,7 +132,7 @@ export default function WelcomeScreen({ autoScrollRef }: Props) {
           )}
           data-testid="welcome-content"
         >
-          {logo}
+          {profileDescription}
           <Starters autoScrollRef={autoScrollRef} />
         </div>
       </div>
@@ -174,7 +155,7 @@ export default function WelcomeScreen({ autoScrollRef }: Props) {
         )}
         data-testid="welcome-content"
       >
-        {logo}
+        {profileDescription}
         {hasStarterWidget ? <Starters autoScrollRef={autoScrollRef} /> : null}
         {hasStarterWidget ? null : <Starters autoScrollRef={autoScrollRef} />}
       </div>
