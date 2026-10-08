@@ -124,7 +124,7 @@ const Header = memo(() => {
           onClick={newChat.handleClickOpen}
         >
           <img
-            src={apiClient.buildEndpoint('/public/icon/logo-ai.png')}
+            src={apiClient.buildEndpoint('/public/icon/logo-ai2.png')}
             alt="logo"
             className="h-10 w-auto max-w-none shrink-0"
           />

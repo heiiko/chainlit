@@ -124,10 +124,10 @@ describe('Header', () => {
     expect(header).toHaveClass('relative', 'z-20');
     expect(logo).toHaveAttribute(
       'src',
-      'http://localhost:8000/nl/public/icon/logo-ai.png'
+      'http://localhost:8000/nl/public/icon/logo-ai2.png'
     );
     expect(mocks.buildEndpoint).toHaveBeenCalledWith(
-      '/public/icon/logo-ai.png'
+      '/public/icon/logo-ai2.png'
     );
     expect(logo).toHaveClass('h-10');
     expect(logo).not.toHaveClass('w-10');
@@ -169,7 +169,7 @@ describe('Header', () => {
 
       expect(screen.getByRole('img', { name: 'logo' })).toHaveAttribute(
         'src',
-        'http://localhost:8000/nl/public/icon/logo-ai.png'
+        'http://localhost:8000/nl/public/icon/logo-ai2.png'
       );
     }
   );
